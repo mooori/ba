@@ -1,6 +1,6 @@
 CC=g++
 # -O2 optimization required for boost
-CFLAGS=-std=c++11 -c -Wall -O2 -I boost_1_59_0
+CFLAGS=-c -Wall -O2 -I boost_1_59_0
 
 all: dsSolver
 

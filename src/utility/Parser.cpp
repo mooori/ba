@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -18,14 +19,21 @@ void Parser::hey() {
     return;
 }
 
-parsed_graph<int> Parser::parse_graph_int(string fpn) {
+parsed_graph<int> Parser::parse_graph_int(const char* fpn) {
     ifstream inp(fpn);
     string line;
     parsed_graph<int> pg;
 
     // read and store vertices till blank line met
     while(getline(inp, line) && !line.empty()) {
-        pg.vertices.push_back(stoi(line));
+        int vname;
+        try { 
+            vname = boost::lexical_cast<int>(line);
+        }
+        catch(const boost::bad_lexical_cast& e) {
+            throw runtime_error("bad input (vertex): \"" + line + "\"");
+        }
+        pg.vertices.push_back(vname);
     }
 
     // graph without vertices may not have edges
@@ -35,7 +43,9 @@ parsed_graph<int> Parser::parse_graph_int(string fpn) {
     while(getline(inp, line)) {
         istringstream iss(line);
         int u, v;
-        if (!(iss >> u >> v)) { throw runtime_error("bad input (edge)"); }
+        if (!(iss >> u >> v)) {
+            throw runtime_error("bad input (edge): \"" + line + "\"");
+        }
         pg.edges.push_back(pair<int,int>(u,v));
     }
 

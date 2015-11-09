@@ -31,10 +31,10 @@ public:
 
     /**
      * Parse graph with vertex names of type int.
-     * @param fpn file name (including full path to file)
+     * @param fpn file name (incl. path relative to executable)
      * @return corresponding parsed_graph (i.e. lists of vertices and edges)
      */
-    parsed_graph<int> parse_graph_int(string fpn);
+    parsed_graph<int> parse_graph_int(const char* fpn);
 };
 
 #endif
