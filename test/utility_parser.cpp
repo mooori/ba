@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE utility_parser
+#define BOOST_TEST_MODULE dsSolver
 
 #include <list>
 #include <boost/test/included/unit_test.hpp>
@@ -7,6 +7,8 @@
 #include "../src/utility/ListHelpers.hpp"
 
 using namespace std;
+
+BOOST_AUTO_TEST_SUITE(utility)
 
 BOOST_AUTO_TEST_CASE(parse_good_graph_int) {
     Parser p;
@@ -25,3 +27,17 @@ BOOST_AUTO_TEST_CASE(parse_good_graph_int) {
             .init_by_arr(arre, sizeof(arre)/sizeof(arre[0]));
     BOOST_TEST(pg.edges == edges_should);
 }
+
+BOOST_AUTO_TEST_CASE(parse_bad_verts_graph_int) {
+    Parser p;
+    BOOST_CHECK_THROW(p.parse_graph_int("test/graph_bad_verts.txt"),
+            runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(parse_bad_edges_graph_int) {
+    Parser p;
+    BOOST_CHECK_THROW(p.parse_graph_int("test/graph_bad_edges.txt"),
+            runtime_error);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
