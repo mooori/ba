@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE dsSolver
 
 #include <list>
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "../src/utility/Parser.hpp"
 #include "../src/utility/ListHelpers.hpp"
@@ -9,6 +9,7 @@
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(utility)
+BOOST_AUTO_TEST_SUITE(utility_parser)
 
 BOOST_AUTO_TEST_CASE(parse_good_graph_int) {
     Parser p;
@@ -40,4 +41,5 @@ BOOST_AUTO_TEST_CASE(parse_bad_edges_graph_int) {
             runtime_error);
 }
 
+BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE_END()
