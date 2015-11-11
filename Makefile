@@ -1,6 +1,7 @@
-CC=g++
+CC = g++
+
 # -O2 optimization required for boost
-CFLAGS=-c -Wall -O2 -I boost_1_59_0
+CFLAGS = -c -Wall -O2 -I boost_1_59_0
 
 all: dsSolver
 
@@ -14,14 +15,8 @@ Parser.o:
 	$(CC) $(CFLAGS) src/utility/Parser.cpp -o src/utility/Parser.o
 
 clean:
-	rm dsSolver src/*.o src/utility/*.o /test/*.o test/test
+	rm -f dsSolver src/*.o src/utility/*.o /test/*.o test/test
 
 # after running `make test` execute `test/test` to actually run tests
-test: dsSolver test_utility_parser.o test_utility_listHelpers.o
-	$(CC) src/utility/Parser.o test/utility_parser.o test/utility_listHelpers.o -o test/test
-
-test_utility_parser.o:
-	$(CC) $(CFLAGS) test/utility_parser.cpp -o test/utility_parser.o
-
-test_utility_listHelpers.o:
-	$(CC) $(CFLAGS) test/utility_listHelpers.cpp -o test/utility_listHelpers.o
+test: dsSolver 
+	$(MAKE) -C test/ test
