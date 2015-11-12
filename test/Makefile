@@ -52,8 +52,9 @@ gtest_main.a : gtest-all.o gtest_main.o
 utility_parser.o : utility_parser.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utility_parser.cpp
 
+# needs boost
 utility_listHelpers.o : utility_listHelpers.cpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utility_listHelpers.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -I ../boost_1_59_0 utility_listHelpers.cpp
 
 main.o : main.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c main.cpp

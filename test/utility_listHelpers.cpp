@@ -1,16 +1,20 @@
 #include <list>
-#include <boost/test/unit_test.hpp>
+
+#include <boost/assign/list_of.hpp> // to create a list
+#include "gtest/gtest.h"
 
 #include "../src/utility/ListHelpers.hpp"
 
 using namespace std;
 
-BOOST_AUTO_TEST_SUITE(utility)
-BOOST_AUTO_TEST_SUITE(utility_listHelpers)
+namespace {
 
-BOOST_AUTO_TEST_CASE(init_list_by_arr_int) {
-    BOOST_TEST(true);
+TEST(ListHelpers, initInt) {
+    list<int> l1, l2;
+    int arr[6] = {1,2,3,4,5,6};
+    l1 = ListHelpers<int>().init_by_arr(arr, sizeof(arr)/sizeof(arr[0]));
+    l2 = boost::assign::list_of(1)(2)(3)(4)(5)(6);
+    EXPECT_EQ(l2, l1);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-BOOST_AUTO_TEST_SUITE_END()
+} // namespace
