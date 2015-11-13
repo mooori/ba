@@ -14,9 +14,7 @@ template<typename T>
 class ListHelpers {
 public:
     
-    /**
-     * Constructor, just creating "empty object"
-     */
+    /** Constructor, just creating "empty object" */
     ListHelpers() { }
 
     /**
