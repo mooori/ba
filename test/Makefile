@@ -56,11 +56,15 @@ utility_parser.o : utility_parser.cpp $(GTEST_HEADERS)
 utility_listHelpers.o : utility_listHelpers.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -I ../boost_1_59_0 utility_listHelpers.cpp
 
+utility_consecIntMap.o : utility_consecIntMap.cpp $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utility_consecIntMap.cpp
+
 main.o : main.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c main.cpp
 
 test : utility_parser.o $(UTIL_DIR)/Parser.o \
 		utility_listHelpers.o \
+		utility_consecIntMap.o \
 		main.o \
 		$(GTEST_DIR)/make/gtest.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
