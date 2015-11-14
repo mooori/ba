@@ -15,7 +15,13 @@ using namespace std;
 template<typename T>
 class ConsecIntMap {
 public:
+    ConsecIntMap() : map_(map<T, int>()) { }
+    
     ConsecIntMap(list<T> vals) : map_(map<T, int>()) {
+        this->populate(vals);
+    }
+
+    void populate(list<T> vals) {
         int ctr = 0;
         for(typename list<T>::iterator it = vals.begin();
                 it != vals.end(); ++it) {
