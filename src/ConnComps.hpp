@@ -8,11 +8,8 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/connected_components.hpp>
 
-#include "types/dstypes.hpp" // required for vertex_original_id_t
+#include "types/dstypes.hpp"
 #include "utility/ConsecIntMap.hpp"
-
-using namespace std;
-using namespace boost;
 
 /** 
  * @brief Find a graph's connected components. Graph must have interior
@@ -34,10 +31,10 @@ public:
      * @param g Graph
      * @return list of references to g's connected components
      */
-    vector<Graph*> find(Graph g) {
-        vector<int> component(num_vertices(g));
+    std::vector<Graph*> find(Graph g) {
+        std::vector<int> component(num_vertices(g));
         int num = connected_components(g, &component[0]);
-        vector<Graph*> conn_comps(num);
+        std::vector<Graph*> conn_comps(num);
         this->construct_subgraphs(g, conn_comps, component, num);
         return conn_comps;
     }
@@ -51,10 +48,11 @@ protected:
      * @param component component[i] is vertex i's component
      * @param num the number of g's components
      */
-    void construct_subgraphs(Graph g, vector<Graph*>& conn_comps,
-            vector<int> component, int num) {
-        vector< list<int> > vs_per_comp = get_verts_per_comp(component, num);
-        vector< ConsecIntMap<int> > vid_maps(num);
+    void construct_subgraphs(Graph g, std::vector<Graph*>& conn_comps,
+            std::vector<int> component, int num) {
+        std::vector< std::list<int> > vs_per_comp = 
+                get_verts_per_comp(component, num);
+        std::vector< ConsecIntMap<int> > vid_maps(num);
         
         // create comps' graph objects, maps of vertex-id's (since BGL 
         // requires vertex-id's of G with |V(G)|=n to be [0,n])
@@ -87,8 +85,9 @@ protected:
      * @return a vector of vertex-id lists, with i-th element being the
      *     vertices in the i-th component
      */
-    vector< list<int> > get_verts_per_comp(vector<int> component, int num) {
-        vector< list<int> > res(num);
+    std::vector< std::list<int> > get_verts_per_comp(std::vector<int> component,
+            int num) {
+        std::vector< std::list<int> > res(num);
         for(unsigned int i = 0;
                 i < sizeof(component)/sizeof(component[0]); ++i) {
             res[component[i]].push_back(i);
@@ -101,12 +100,12 @@ protected:
      * @param g pointer to graph
      * @param orig_ids list of original ids
      */
-    void set_vprop_origid(Graph* g, const list<int>& orig_ids) {
-        typedef typename graph_traits<Graph>::vertex_iterator vert_it_t;
-        typename property_map<Graph, vertex_original_id_t>::type
+    void set_vprop_origid(Graph* g, const std::list<int>& orig_ids) {
+        typedef typename boost::graph_traits<Graph>::vertex_iterator vert_it_t;
+        typename boost::property_map<Graph, vertex_original_id_t>::type
                 pm_orig_id = get(vertex_original_id, *g);
         pair<vert_it_t, vert_it_t> vit;
-        list<int>::const_iterator lit = orig_ids.begin();
+        std::list<int>::const_iterator lit = orig_ids.begin();
 
         for(vit = vertices(*g); vit.first != vit.second; ++vit.first) {
             put(pm_orig_id, *vit.first, *lit++);
