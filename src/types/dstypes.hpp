@@ -4,7 +4,7 @@
 #include <boost/config.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
-/** @brief Definition of some commonly used types */
+/** @brief Definition of some commonly used types related to Graph object */
 
 /**
  * @note Custom interior vertex properties

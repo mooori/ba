@@ -29,7 +29,7 @@ public:
 
     /**
      * @param g Graph
-     * @return list of references to g's connected components
+     * @return list of pointers to g's connected components
      */
     std::vector<Graph*> find(Graph g) {
         std::vector<int> component(num_vertices(g));
