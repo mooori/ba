@@ -33,7 +33,8 @@ public:
      */
     distance_info get_info(Graph& g) {
         const int num_verts = boost::num_vertices(g);
-        std::vector<int> eccs(num_verts, constants::distance_init); //eccentricities
+        std::vector<int> eccs(num_verts,
+                constants::distance_init); //eccentricities
         distance_info di;
 
         // starting from each vertex do bfs to get it's eccentricity
@@ -52,27 +53,5 @@ public:
         return di;
     }
 };
-
-/**
-distance_info Distance<Graph>::get_info {
-    const int num_verts = boost::num_vertices(g);
-    std::vector<int> eccs(num_verts, constants::distance_init); //eccentricities
-    distance_info di;
-
-    // starting from each vertex do bfs to get it's eccentricity
-    for(int i = 0; i < num_verts; ++i) {
-        std::vector<int> dists_src(num_verts, constants::distance_init);
-        dists_src[i] = 0;
-        int ecc_i = constants::distance_init;
-        breadth_first_search(g, i, visitor(
-                distance_bfs< std::vector<int> >(&dists_src[0], &ecc_i)));
-        eccs[i] = ecc_i;
-        di.radius = std::min(di.radius, ecc_i);
-        di.diameter = std::max(di.diameter, ecc_i);
-    }
-
-    return di;
-}
-*/
 
 #endif
