@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <list>
+#include <stdexcept>
 
 #include <boost/config.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -66,7 +67,7 @@ protected:
         // Add each edge e in E(G) to the components it verices are in
         typedef typename boost::graph_traits<Graph>::edge_iterator
                 edge_iterator_t;
-        for(pair<edge_iterator_t, edge_iterator_t> eit = edges(g);
+        for(std::pair<edge_iterator_t, edge_iterator_t> eit = edges(g);
                 eit.first != eit.second; ++eit.first) {
             int src = source(*eit.first, g);
             int tar = target(*eit.first, g);
@@ -104,7 +105,7 @@ protected:
         typedef typename boost::graph_traits<Graph>::vertex_iterator vert_it_t;
         typename boost::property_map<Graph, vertex_original_id_t>::type
                 pm_orig_id = get(vertex_original_id, *g);
-        pair<vert_it_t, vert_it_t> vit;
+        std::pair<vert_it_t, vert_it_t> vit;
         std::list<int>::const_iterator lit = orig_ids.begin();
 
         for(vit = vertices(*g); vit.first != vit.second; ++vit.first) {
@@ -113,7 +114,7 @@ protected:
 
         // if lit doesn't point to end, something is wrong!
         if(lit != orig_ids.end()) {
-            throw runtime_error("num edges in g != |orig_ids|");
+            throw std::runtime_error("num edges in g != |orig_ids|");
         }
 
         return;

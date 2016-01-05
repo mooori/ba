@@ -4,8 +4,6 @@
 #include <utility>
 #include <list>
 
-using namespace std;
-
 /**
  * Type to hold list of vertices and adj. list of edges obtained from parsing
  * graph from file.
@@ -14,8 +12,8 @@ using namespace std;
 
 template<typename T>
 struct parsed_graph {
-    list<T> vertices;
-    list< pair<T,T> > edges;
+    std::list<T> vertices;
+    std::list< std::pair<T,T> > edges;
 };
 
 #endif

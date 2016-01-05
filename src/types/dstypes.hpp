@@ -1,6 +1,8 @@
 #ifndef DSTYPES_H
 #define DSTYPES_H
 
+#include <utility>
+
 #include <boost/config.hpp>
 #include <boost/graph/adjacency_list.hpp>
 

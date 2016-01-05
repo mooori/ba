@@ -1,11 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <string>
-
 #include "../types/parsed_graph.hpp"
-
-using namespace std;
 
 /**
  * Parser to read Graphs from text files.
