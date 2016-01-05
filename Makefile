@@ -6,7 +6,7 @@ CFLAGS = -c -Wall -O2 -I boost_1_59_0
 all: dsSolver
 
 dsSolver: Parser.o main.o
-	$(CC) src/main.o src/utility/Parser.o -o dsSolver
+	$(CC) src/utility/Parser.o src/main.o -o dsSolver
 
 main.o:
 	$(CC) $(CFLAGS) src/main.cpp -o src/main.o
