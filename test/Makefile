@@ -62,6 +62,9 @@ utility_consecIntMap.o : utility_consecIntMap.cpp $(GTEST_HEADERS)
 conn_comps.o : conn_comps.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -I ../boost_1_59_0 conn_comps.cpp
 
+distance.o : distance.cpp $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -I ../boost_1_59_0 distance.cpp
+
 main.o : main.cpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c main.cpp
 
@@ -69,6 +72,7 @@ test : utility_parser.o $(UTIL_DIR)/Parser.o \
 		utility_listHelpers.o \
 		utility_consecIntMap.o \
 		conn_comps.o \
+		distance.o \
 		main.o \
 		$(GTEST_DIR)/make/gtest.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
