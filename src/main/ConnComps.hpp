@@ -9,8 +9,8 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/connected_components.hpp>
 
-#include "types/dstypes.hpp"
-#include "utility/ConsecIntMap.hpp"
+#include "../types/dstypes.hpp"
+#include "../utility/ConsecIntMap.hpp"
 
 /** 
  * @brief Find a graph's connected components. Graph must have interior

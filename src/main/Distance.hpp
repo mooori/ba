@@ -8,9 +8,9 @@
 #include <boost/graph/visitors.hpp>
 #include <boost/graph/breadth_first_search.hpp>
 
-#include "types/distance_info.hpp"
-#include "utility/constants.hpp"
-#include "visitors/distance_bfs.hpp"
+#include "../types/distance_info.hpp"
+#include "../utility/constants.hpp"
+#include "../visitors/distance_bfs.hpp"
 
 /**
  * @class Distance

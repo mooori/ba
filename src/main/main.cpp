@@ -5,9 +5,9 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/property_map/property_map.hpp>
 
-#include "types/dstypes.hpp"
-#include "types/distance_info.hpp"
-#include "utility/Parser.hpp"
+#include "../types/dstypes.hpp"
+#include "../types/distance_info.hpp"
+#include "../utility/Parser.hpp"
 #include "ConnComps.hpp"
 #include "Distance.hpp"
 
