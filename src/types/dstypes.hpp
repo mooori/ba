@@ -24,7 +24,7 @@ namespace boost {
 typedef boost::adjacency_list<boost::setS, boost::vecS, boost::undirectedS,
         boost::property<vertex_original_id_t, int> > DSGraph;
 
-typedef int DSVertex;
+typedef unsigned int DSVertex;
 typedef std::pair<int, int> DSEdge;
 
 typedef typename boost::graph_traits<DSGraph>::edge_iterator DS_edge_it_t;
