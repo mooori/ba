@@ -47,9 +47,10 @@ gtest_main.a : gtest-all.o gtest_main.o
 # Tests
 SRC := $(wildcard *.cpp)
 OBJ := $(SRC:.cpp=.o)
+LINK := ../src/utility/Parser.o
 LIBS := ../boost_1_59_0
 
-test: $(OBJ) $(GTEST_DIR)/make/gtest.a ../src/utility/Parser.o
+test: $(OBJ) $(GTEST_DIR)/make/gtest.a $(LINK)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 include $(OBJ:.o=.d)
