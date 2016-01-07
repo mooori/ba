@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 /**
  * Put main in separate file which is then linked, to ensure that

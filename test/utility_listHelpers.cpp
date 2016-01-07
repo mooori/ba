@@ -1,7 +1,7 @@
 #include <list>
 
 #include <boost/assign/list_of.hpp> // to create a list
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "../src/utility/ListHelpers.hpp"
 

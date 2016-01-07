@@ -4,7 +4,7 @@
 #include<boost/config.hpp>
 #include<boost/graph/adjacency_list.hpp>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "../src/main/ConnComps.hpp"
 #include "../src/types/dstypes.hpp"

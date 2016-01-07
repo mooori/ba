@@ -3,7 +3,7 @@
 #include <boost/config.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "../src/types/dstypes.hpp"
 #include "../src/types/distance_info.hpp"

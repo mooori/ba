@@ -1,6 +1,6 @@
 #include <list>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "../src/utility/Parser.hpp"
 #include "../src/utility/ListHelpers.hpp"
