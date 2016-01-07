@@ -7,7 +7,7 @@
 
 #include "../src/types/dstypes.hpp"
 #include "../src/types/distance_info.hpp"
-#include "../src/Distance.hpp"
+#include "../src/main/Distance.hpp"
 #include "../src/utility/Parser.hpp"
 
 namespace {

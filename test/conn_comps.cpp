@@ -6,7 +6,7 @@
 
 #include "gtest/gtest.h"
 
-#include "../src/ConnComps.hpp"
+#include "../src/main/ConnComps.hpp"
 #include "../src/types/dstypes.hpp"
 #include "../src/utility/Parser.hpp"
 #include "../src/utility/ListHelpers.hpp"
