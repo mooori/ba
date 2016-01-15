@@ -1,39 +1,31 @@
 #ifndef DSTYPES_H
 #define DSTYPES_H
 
+#include <map>
 #include <utility>
 
 #include <boost/config.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
-/** @brief Definition of some commonly used types related to Graph object */
-
-/**
- * @note Custom interior vertex properties
- * Custom interior vertex properties are added according to example in 
- * libs/graph/example/interior_property_map.cpp
- * This was the only hint I found on how to do it.
+/** @brief Definition of some commonly used types related to Graph object
+ * B relates to Boost Graph Library
+ * I relates to original input
  */
 
-/** interior vertex prop: original_ida*/
-enum vertex_original_id_t { vertex_original_id };
-namespace boost {
-    BOOST_INSTALL_PROPERTY(vertex, original_id);
-}
+/** Boost Graph */
+typedef boost::adjacency_list<boost::setS, boost::listS, boost::undirectedS>
+        BGraph;
 
-typedef boost::adjacency_list<boost::setS, boost::vecS, boost::undirectedS,
-        boost::property<vertex_original_id_t, int> > DSGraph;
+typedef BGraph::vertex_descriptor BVertex;
+typedef BGraph::edge_descriptor BEdge;
 
-typedef unsigned int DSVertex;
-typedef std::pair<int, int> DSEdge;
+typedef BGraph::vertex_iterator BVertex_it;
+typedef BGraph::edge_iterator BEdge_it;
 
-typedef typename boost::graph_traits<DSGraph>::edge_iterator DS_edge_it_t;
-typedef typename boost::graph_traits<DSGraph>::vertex_iterator DS_vertex_it_t;
+typedef typename boost::graph_traits<BGraph>::adjacency_iterator
+        B_adjacency_it;
 
-typedef typename boost::graph_traits<DSGraph>::adjacency_iterator
-        DS_adjacency_it;
-
-typedef typename boost::property_map<DSGraph, vertex_original_id_t>::type
-        DSProp_Acc_original_id;
+typedef unsigned int IVertex;
+typedef std::pair<IVertex, IVertex> IEdge;
 
 #endif
