@@ -66,7 +66,7 @@ public:
     /**
      * Add edge between IVertices
      * @param e edge to be added, for type IEdge @see dstypes.hpp
-     * @throws std::runtime_error("IVertex not in G") if any of input
+     * @throws std::out_of_range("IVertex not in G") if any of input
      *     vertices not in G, @see getBVertex
      * @throws std::runtime_error("duplicate edges not allowed")
      *     if boost::add_vertex returns bool flag FALSE (edge already in G).
