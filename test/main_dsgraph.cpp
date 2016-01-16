@@ -1,4 +1,5 @@
 #include <list>
+#include <utility>
 
 #include <gtest/gtest.h>
 
@@ -7,6 +8,17 @@
 #include "../src/utility/ListHelpers.hpp"
 
 namespace {
+
+TEST(DSGraph, EmptyGraph) {
+    DSGraph dsg;
+    EXPECT_EQ(0, dsg.num_vertices());
+    
+    std::pair<BVertex_it, BVertex_it> vit = dsg.vertices();
+    EXPECT_TRUE(vit.first == vit.second) << "empty G should have no vertices";
+
+    std::pair<BEdge_it, BEdge_it> eit = dsg.edges();
+    EXPECT_TRUE(eit.first == eit.second) << "empty G should have no edges";
+}
 
 TEST(DSGraph, GraphConstruction) {
     // using same graph as stored in g1.txt
