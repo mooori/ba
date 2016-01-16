@@ -9,6 +9,51 @@
 
 namespace {
 
+TEST(DSGraph, Exceptions) {
+    // cannot add same IVertex twice
+    DSGraph dsg1;
+    dsg1.add_IVertex(666);
+    ASSERT_THROW(dsg1.add_IVertex(666), std::runtime_error);
+
+    // ...adding vertices via list
+    DSGraph dsg2;
+    std::list<IVertex> vids;
+    vids.push_back(666); vids.push_back(666);
+    ASSERT_THROW(dsg2.add_IVertices(vids), std::runtime_error);
+    
+    // cannot add same IEdge twice
+    DSGraph dsg3;
+    dsg3.add_IVertex(0); dsg3.add_IVertex(1);
+    dsg3.add_IEdge(IEdge(0, 1));
+    ASSERT_THROW(dsg3.add_IEdge(IEdge(1, 0)), std::runtime_error);
+
+    // ... adding vertices via list
+    DSGraph dsg4;
+    dsg4.add_IVertex(0); dsg4.add_IVertex(1);
+    std::list<IEdge> es;
+    es.push_back(IEdge(0, 1)); es.push_back(IEdge(1, 0));
+    ASSERT_THROW(dsg4.add_IEdges(es), std::runtime_error);
+
+    // try adding edge to IVertex that's not in G
+    DSGraph dsg5;
+    dsg5.add_IVertex(0); dsg5.add_IVertex(1);
+    ASSERT_THROW(dsg5.add_IEdge(IEdge(0, 666)), std::out_of_range);
+    ASSERT_THROW(dsg5.add_IEdge(IEdge(666, 0)), std::out_of_range);
+
+    // try getting B/I vertices that are not in G 
+    DSGraph dsg6;
+    dsg6.add_IVertex(0);
+    ASSERT_THROW(dsg6.get_BVertex(666), std::out_of_range);
+    // BVertex is a ptr address, so 0 should never be a BVertex
+    ASSERT_THROW(dsg6.get_IVertex(0), std::out_of_range);
+
+    // getting IEdge of BEdge thats not in G
+    DSGraph dsg7;
+    dsg7.add_IVertex(0); dsg7.add_IVertex(1);
+    ASSERT_THROW(dsg7.get_IEdge(*(dsg7.edges().first)), std::out_of_range);
+
+}
+
 TEST(DSGraph, EmptyGraph) {
     DSGraph dsg;
     EXPECT_EQ(0, dsg.num_vertices());
@@ -63,7 +108,6 @@ TEST(DSGraph, GraphConstruction) {
     }
     // reached end of edges_should list, so also dsg_eit should be at end
     ASSERT_TRUE(dsg_eit.first == dsg_eit.second) << "too many edges in actual";
-
 }
 
 } // namespace
