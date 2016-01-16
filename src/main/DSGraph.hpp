@@ -138,7 +138,9 @@ public:
      */
     BVertex get_BVertex(IVertex vid) {
         map_v_I2B_t::iterator it = this->map_v_I2B.find(vid);
-        if(it == map_v_I2B.end()) { throw std::out_of_range("IVertex not in G"); }
+        if(it == map_v_I2B.end()) {
+            throw std::out_of_range("IVertex not in G");
+        }
         return it->second;
     }
 
@@ -148,7 +150,9 @@ public:
      */
     IVertex get_IVertex(BVertex bvid) {
         map_v_B2I_t::iterator it = this->map_v_B2I.find(bvid);
-        if(it == map_v_B2I.end()) { throw std::out_of_range("BVertex not in G"); }
+        if(it == map_v_B2I.end()) {
+            throw std::out_of_range("BVertex not in G");
+        }
         return it->second;
     }
 
