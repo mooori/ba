@@ -9,7 +9,7 @@
 
 namespace {
 
-TEST(DSGraph, Exceptions) {
+TEST(DSGraph, exceptions) {
     // cannot add same IVertex twice
     DSGraph dsg1;
     dsg1.add_IVertex(666);
@@ -54,7 +54,7 @@ TEST(DSGraph, Exceptions) {
 
 }
 
-TEST(DSGraph, EmptyGraph) {
+TEST(DSGraph, emptyGraph) {
     DSGraph dsg;
     EXPECT_EQ(0, dsg.num_vertices());
     
@@ -65,7 +65,7 @@ TEST(DSGraph, EmptyGraph) {
     EXPECT_TRUE(eit.first == eit.second) << "empty G should have no edges";
 }
 
-TEST(DSGraph, GraphConstruction) {
+TEST(DSGraph, graphConstruction) {
     // using same graph as stored in g1.txt
     DSGraph dsg;
     EXPECT_EQ(0, dsg.num_vertices());
@@ -108,6 +108,28 @@ TEST(DSGraph, GraphConstruction) {
     }
     // reached end of edges_should list, so also dsg_eit should be at end
     ASSERT_TRUE(dsg_eit.first == dsg_eit.second) << "too many edges in actual";
+}
+
+TEST(DSGraph, stuff) {
+    // test for functions not (indirectly) tested in graphConstruction
+    // get_IEdge
+    DSGraph dsg1;
+    dsg1.add_IVertex(0); dsg1.add_IVertex(1); dsg1.add_IVertex(2);
+    dsg1.add_IEdge(IEdge(0, 1)); dsg1.add_IEdge(IEdge(0, 2));
+    std::pair<BEdge_it, BEdge_it> eit = dsg1.edges();
+    ++eit.first;
+    IEdge e = dsg1.get_IEdge(*eit.first);
+    EXPECT_EQ(IEdge(0, 2), e);
+
+    // get_BVertex
+    DSGraph dsg2;
+    dsg2.add_IVertex(0); dsg2.add_IVertex(1); dsg2.add_IVertex(2);
+    std::pair<BVertex_it, BVertex_it> vit = dsg2.vertices();
+    EXPECT_EQ(*vit.first, dsg2.get_BVertex(0));
+    ++vit.first;
+    EXPECT_EQ(*vit.first, dsg2.get_BVertex(1));
+    ++vit.first;
+    EXPECT_EQ(*vit.first, dsg2.get_BVertex(2));
 }
 
 } // namespace
