@@ -61,7 +61,7 @@ public:
      * @param vids list of IVertices to add
      * @throws @see add_IVertex
      */
-    void add_IVertices(std::list<IVertex> vids);
+    void add_IVertices(std::list<IVertex>& vids);
 
     /**
      * Add edge between IVertices
@@ -78,7 +78,7 @@ public:
      * @param es list of IEdges to add
      * @throws @see add_IEdge
      */
-    void add_IEdges(std::list<IEdge> es);
+    void add_IEdges(std::list<IEdge>& es);
 
     /**
      * Get BVertex by IVertex
@@ -161,7 +161,7 @@ void DSGraph::add_IVertex(IVertex vid) {
     return;
 }
 
-void DSGraph::add_IVertices(std::list<IVertex> vids) {
+void DSGraph::add_IVertices(std::list<IVertex>& vids) {
     for(std::list<IVertex>::iterator it = vids.begin(); it != vids.end();
             ++it) {
         this->add_IVertex(*it);
@@ -180,7 +180,7 @@ void DSGraph::add_IEdge(IEdge e) {
     return;
 }
 
-void DSGraph::add_IEdges(std::list<IEdge> es) {
+void DSGraph::add_IEdges(std::list<IEdge>& es) {
     for(std::list<IEdge>::iterator it = es.begin(); it != es.end(); ++it) {
         this->add_IEdge(*it);
     }
