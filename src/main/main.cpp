@@ -5,17 +5,14 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/property_map/property_map.hpp>
 
-#include "../types/dstypes.hpp"
-#include "../types/distance_info.hpp"
-#include "../utility/Parser.hpp"
-#include "ConnComps.hpp"
 #include "Distance.hpp"
+#include "../types/dstypes.hpp"
+#include "../utility/Parser.hpp"
 
-using namespace boost;
 
 int main() {
+    /*
     Parser p;
-    p.hey();
     parsed_graph<int> pg = p.parse_graph_int(
             "/home/mo/docs/tu/ba/test/g_distance.txt");
     DSGraph g(pg.vertices.size());
@@ -28,5 +25,11 @@ int main() {
     distance_info di = Distance<DSGraph>().get_info(g);
     std::cout << "radius = " << di.radius << std::endl;
     std::cout << "diameter = " << di.diameter << std::endl;
+    return 0;
+    */
+
+    Parser p;
+    DSGraph dsg =
+            p.parse_graph_int("../test/graphs/g1.txt");
     return 0;
 }
