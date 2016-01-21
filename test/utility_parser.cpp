@@ -46,6 +46,21 @@ TEST(ParserInt, goodGraph) {
     ASSERT_TRUE(dsg_eit.first == dsg_eit.second) << "too many edges in actual";
 }
 
+TEST(ParserInt, emptyGraph) {
+    Parser p;
+    DSGraph dsg = p.parse_graph_int("graphs/empty.txt");
+
+    // vertices
+    EXPECT_EQ(0, dsg.num_vertices());
+    std::pair<BVertex_it, BVertex_it> vit = dsg.vertices();
+    EXPECT_TRUE(vit.first == vit.second);
+
+    // edges
+    std::pair<BEdge_it, BEdge_it> eit = dsg.edges();
+    EXPECT_TRUE(eit.first == eit.second);
+}
+
+
 TEST(ParserInt, exceptions) {
     // bad vertices
     Parser p1;
