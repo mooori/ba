@@ -14,15 +14,9 @@ namespace {
 
 TEST(Distance, getInfo) {
     // construct graph
-    parsed_graph<int> pg = Parser().parse_graph_int("test/g_distance.txt");
-    DSGraph g(pg.vertices.size());
-    for(std::list< std::pair<int, int> >::iterator it = pg.edges.begin();
-            it != pg.edges.end(); ++it) {
-        DSEdge e = *it;
-        boost::add_edge(e.first, e.second, g);
-    }
-
-    distance_info di = Distance<DSGraph>().get_info(g);
+    DSGraph dsg = Parser().parse_graph_int("g_distance.txt");
+    
+    distance_info di = Distance().get_info(dsg);
 
     EXPECT_EQ(3, di.radius);
     EXPECT_EQ(6, di.diameter);
