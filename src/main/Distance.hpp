@@ -36,16 +36,11 @@ public:
     distance_info get_info(DSGraph& dsg) {
         distance_info di;
 
-        // edge cases
+        // edge cases: empty graph or just a single vertex
+        // (no other edge cases, as Distance supposed to work on connected
+        //  componentes, only!)
         if(dsg.num_vertices() == 0 || dsg.num_vertices() == 1) {
             di.radius = 0; di.diameter = 0;
-            return di;
-        }
-
-        std::pair<BEdge_it, BEdge_it> eit = dsg.edges();
-        if(dsg.num_vertices() >= 2 && eit.first == eit.second) {
-            di.radius = (std::numeric_limits<int>::max)();
-            di.diameter = (std::numeric_limits<int>::max)();
             return di;
         }
 
