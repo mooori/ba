@@ -21,8 +21,8 @@ class distance_bfs : public boost::default_bfs_visitor {
 public:
     /**
      * Constructor.
-     * @param d Container of length num_vertices(g), initiated with d[src] = 0
-     *     and all other values of d set to -1
+     * @param d Container so far only tested for std::map<BVertex, int>, with
+     *     d[src] set to 0 (init for counting distances).
      */
     distance_bfs(Container& ds, int& dm) : dists_src(ds), max_dist(dm) { }
 
