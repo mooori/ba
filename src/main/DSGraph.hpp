@@ -165,6 +165,29 @@ public:
                 this->get_IVertex(boost::target(be, *(this->G))));
     }
 
+    /**
+     * Remove BVertex
+     * Side effects: clear v, remove v from maps
+     * @throws @see maps_remove_BVertex
+     */
+    void remove_BVertex(BVertex bvid) {
+        // boost::clear_vertex just dumps core if bvid not in G
+        // not really helpful for error handling...
+        boost::clear_vertex(bvid, *(this->G));
+        this->maps_remove_BVertex(bvid);
+        boost::remove_vertex(bvid, *(this->G));
+        return;
+    }
+
+    /**
+     * Remove IVertex, just a wrapper for @see remove_BVertex
+     * @throws @see get_BVertex, @see remove_BVertex
+     */
+    void remove_IVertex(IVertex vid) {
+        this->remove_BVertex(this->get_BVertex(vid));
+        return;
+    }
+
 private:
     /** type of map from input to boost vertex */
     typedef std::map<IVertex, BVertex> map_v_I2B_t;
@@ -183,6 +206,21 @@ private:
      * map[bid] = oid, @see map_oid_bid
      */
     map_v_B2I_t map_v_B2I;
+
+    /**
+     * Remove BVertex from both maps
+     * @throws std::runtime_error if BVertex not in maps
+     */
+    void maps_remove_BVertex(BVertex bvid) {
+        IVertex vid = this->get_IVertex(bvid);
+        if(this->map_v_I2B.erase(vid) != 1) {
+            throw std::runtime_error("IVertex not exactly once in map_v_I2B");
+        }
+        if(this->map_v_B2I.erase(bvid) != 1) {
+            throw std::runtime_error("BVertex not exactly once in map_v_B2I");
+        }
+        return;
+    }
 };
 
 #endif
