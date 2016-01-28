@@ -3,9 +3,11 @@
 
 #include <gtest/gtest.h>
 
+#include "helpers_graphComp.hpp"
 #include "../src/main/DSGraph.hpp"
 #include "../src/types/dstypes.hpp"
 #include "../src/utility/ListHelpers.hpp"
+#include "../src/utility/Parser.hpp"
 
 namespace {
 
@@ -108,6 +110,39 @@ TEST(DSGraph, graphConstruction) {
     }
     // reached end of edges_should list, so also dsg_eit should be at end
     ASSERT_TRUE(dsg_eit.first == dsg_eit.second) << "too many edges in actual";
+}
+
+TEST(DSGraph, removeVertex) {
+    // use Parser to get graphs, it's faster & easier
+    Parser p;
+    DSGraph dsg = p.parse_graph_int("graphs/g1.txt");
+
+    ASSERT_EQ(6, dsg.num_vertices());
+
+    // remove vertex and check resulting graph
+    dsg.remove_IVertex(3);
+
+    // check vertices
+    ASSERT_EQ(5, dsg.num_vertices());
+
+    IVertex arrv[5] = {0, 1, 2, 4, 5};
+    std::list<IVertex> verts_should = ListHelpers<IVertex>()
+            .init_by_arr(arrv, sizeof(arrv)/sizeof(arrv[0]));
+    graphComp::compare_vertices(dsg, verts_should);
+
+    // check edges
+    IEdge arre[2] = {IEdge(0, 4), IEdge(1, 5)};
+    std::list<IEdge> edges_should = ListHelpers<IEdge>()
+            .init_by_arr(arre, sizeof(arre)/sizeof(arre[0]));
+    graphComp::compare_edges(dsg, edges_should);
+
+    // try deleting vert which isn't there and check it didn't change graph
+    ASSERT_THROW(dsg.remove_IVertex(666), std::out_of_range);
+    graphComp::compare_vertices(dsg, verts_should);
+    graphComp::compare_edges(dsg, edges_should);
+
+    // Boost doesn't throw anything if trying to clear a vertex which isn't
+    // there, just dumps core. Would be too ugly to test.
 }
 
 TEST(DSGraph, stuff) {
