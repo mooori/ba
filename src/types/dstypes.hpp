@@ -23,7 +23,7 @@ typedef BGraph::vertex_iterator BVertex_it;
 typedef BGraph::edge_iterator BEdge_it;
 
 typedef typename boost::graph_traits<BGraph>::adjacency_iterator
-        B_adjacency_it;
+        B_adj_it;
 
 typedef unsigned int IVertex;
 typedef std::pair<IVertex, IVertex> IEdge;

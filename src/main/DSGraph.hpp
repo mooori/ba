@@ -2,6 +2,7 @@
 #define DSGRAPH_H
 
 #include <algorithm>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -163,6 +164,51 @@ public:
     IEdge get_IEdge(BEdge be) {
         return IEdge(this->get_IVertex(boost::source(be, *(this->G))),
                 this->get_IVertex(boost::target(be, *(this->G))));
+    }
+
+    /**
+     * Get BVertices adjacent to BVertex
+     * @param bvid BVertex of which adj vertices are requested
+     * @returns std::set of adjacent BVertices
+     * @throws std::runtime_error if a bvid appears more than once in adj list
+     */
+    std::set<BVertex> get_adj_BVertices(BVertex bvid) {
+        std::pair<B_adj_it, B_adj_it> adj_it = 
+                boost::adjacent_vertices(bvid, *(this->G));
+        std::set<BVertex> adj_verts;
+        
+        for( ; adj_it.first != adj_it.second; ++adj_it.first) {
+            std::pair< std::set<BVertex>::iterator, bool > res =
+                    adj_verts.insert(*adj_it.first);
+            if(!res.second) {
+                throw std::runtime_error("duplicate adjacent vertices");
+            }
+        }
+
+        return adj_verts;
+    }
+
+    /**
+     * Get IVertices adjacent to IVertex
+     * @param vid IVertex of which adj vertices are requested
+     * @returns std::set of adjacent IVertices
+     * @throws @see get_IVertex and std::runtime_error if a vid appears more
+     *     than once in adj list.
+     */
+    std::set<IVertex> get_adj_IVertices(IVertex vid) {
+        std::pair<B_adj_it, B_adj_it> adj_it =
+                boost::adjacent_vertices(this->get_BVertex(vid), *(this->G));
+        std::set<IVertex> adj_verts;
+
+        for( ; adj_it.first != adj_it.second; ++adj_it.first) {
+            std::pair< std::set<IVertex>::iterator, bool > res =
+                    adj_verts.insert(this->get_IVertex(*adj_it.first));
+            if(!res.second) {
+                throw std::runtime_error("duplicate adjacent vertices");
+            }
+        }
+
+        return adj_verts;
     }
 
     /**
