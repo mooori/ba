@@ -1,4 +1,5 @@
 #include <list>
+#include <set>
 #include <utility>
 
 #include <gtest/gtest.h>
@@ -112,8 +113,59 @@ TEST(DSGraph, graphConstruction) {
     ASSERT_TRUE(dsg_eit.first == dsg_eit.second) << "too many edges in actual";
 }
 
+TEST(DSGraph, getAdjVertices) {
+    // g1.txt
+    Parser p1;
+    DSGraph dsg1 = p1.parse_graph_int("graphs/g1.txt");
+
+    // check BV neighbours of IV 4
+    IVertex arr1[1] = { 0 };
+    std::set<BVertex> should1 = graphComp::init_set_BVs_by_IVs(dsg1,
+            arr1, sizeof(arr1)/sizeof(arr1[0]));
+    std::set<BVertex> act1 = dsg1.get_adj_BVertices(dsg1.get_BVertex(4));
+    EXPECT_EQ(should1.size(), act1.size()); 
+    EXPECT_EQ(should1, act1);
+
+    // check BV neighbours of IV 3
+    IVertex arr2[3] = { 1, 2, 5 };
+    std::set<BVertex> should2 = graphComp::init_set_BVs_by_IVs(dsg1,
+            arr2, sizeof(arr2)/sizeof(arr2[0]));
+    std::set<BVertex> act2 = dsg1.get_adj_BVertices(dsg1.get_BVertex(3));
+    EXPECT_EQ(should2.size(), act2.size());
+    EXPECT_EQ(should2, act2);
+
+    // check IV neighbours of IV 0
+    IVertex arr3[1] = { 4 };
+    std::set<IVertex> should3 = graphComp::init_set_IVs_by_IVs(arr3,
+            sizeof(arr3)/sizeof(arr3[0]));
+    std::set<IVertex> act3 = dsg1.get_adj_IVertices(0);
+    EXPECT_EQ(should3.size(), act3.size());
+    EXPECT_EQ(should3, act3);
+
+    // check IV neighbors of IV 3
+    IVertex arr4[3] = { 1, 2, 5 };
+    std::set<IVertex> should4 = graphComp::init_set_IVs_by_IVs(arr4,
+            sizeof(arr4)/sizeof(arr4[0]));
+    std::set<IVertex> act4 = dsg1.get_adj_IVertices(3);
+    EXPECT_EQ(should4.size(), act4.size());
+    EXPECT_EQ(should4, act4);
+
+    // just_a_vertex.txt
+    Parser p2;
+    DSGraph dsg2 = p2.parse_graph_int("graphs/just_a_vertex.txt");
+
+    // check BV neighbours of IV 0
+    std::set<BVertex> act5 = dsg2.get_adj_BVertices(dsg2.get_BVertex(0));
+    EXPECT_EQ(0, act5.size());
+    EXPECT_EQ(std::set<BVertex>(), act5);
+
+    // check IV neighbours of IV 0
+    std::set<IVertex> act6 = dsg2.get_adj_IVertices(0);
+    EXPECT_EQ(0, act6.size());
+    EXPECT_EQ(std::set<IVertex>(), act6);
+}
+
 TEST(DSGraph, removeVertex) {
-    // use Parser to get graphs, it's faster & easier
     Parser p;
     DSGraph dsg = p.parse_graph_int("graphs/g1.txt");
 
