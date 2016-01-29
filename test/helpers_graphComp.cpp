@@ -1,4 +1,6 @@
 #include <list>
+#include <set>
+#include <stdexcept>
 #include <utility>
 
 #include <gtest/gtest.h>
@@ -36,4 +38,30 @@ void graphComp::compare_edges(DSGraph& dsg, std::list<IEdge>& should) {
 
     ASSERT_TRUE(act_it.first == act_it.second) << "too many edges in actual";
     return;
+}
+
+std::set<BVertex> graphComp::init_set_BVs_by_IVs(DSGraph& dsg, IVertex vids[],
+        size_t vids_size) {
+    std::set<BVertex> s;
+    for(unsigned int i = 0; i < vids_size; ++i) {
+        std::pair< std::set<BVertex>::iterator, bool > res =
+                s.insert(dsg.get_BVertex(vids[i]));
+        if(!res.second) {
+            throw std::runtime_error("duplicate IVertex");
+        }
+    }
+    return s;
+}
+
+std::set<IVertex> graphComp::init_set_IVs_by_IVs(IVertex vids[],
+        size_t vids_size) {
+    std::set<IVertex> s;
+    for(unsigned int i = 0; i < vids_size; ++i) {
+        std::pair< std::set<IVertex>::iterator, bool > res =
+                s.insert(vids[i]);
+        if(!res.second) {
+            throw std::runtime_error("duplicate IVertex");
+        }
+    }
+    return s;
 }
