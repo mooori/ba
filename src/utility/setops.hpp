@@ -1,6 +1,7 @@
 #ifndef SETOPS_H
 #define SETOPS_H
 
+#include <list>
 #include <stdexcept>
 #include <set>
 #include <utility>
@@ -154,6 +155,45 @@ std::set<T> setminus_inp(std::set<T>& s1, std::set<T>& s2) {
         }
     }
     return s1;
+}
+
+/**
+ * Remove sets that contain v from list of sets - input list unchanged
+ * @param l list of sets
+ * @param v element to look for
+ * @returns l less than elements of l that contain v
+ */
+template<typename T>
+std::list< std::set<T> > filter_containing_v_new(
+        std::list< std::set<T> >& l, T v) {
+    // iterate through l, add each el of l not containing v to res
+    std::list< std::set<T> > res;
+
+    for(typename std::list< std::set<T> >::iterator l_it = l.begin();
+            l_it != l.end(); ++l_it ) {
+        if(l_it->find(v) != l_it->end()) { continue; }
+        res.push_back(*l_it);
+    }
+
+    return res;
+}
+
+/**
+ * @see filter_containing_v_new, only diff: input list may be modified
+ */
+template<typename T>
+void filter_containing_v_inp(
+        std::list< std::set<T> >& l, T v) {
+    // iterate through l, del each el that contains v
+    for(typename std::list< std::set<T> >::iterator l_it = l.begin();
+            l_it != l.end(); ) {
+        if(l_it->find(v) != l_it->end()) {
+            l_it = l.erase(l_it);
+        } else {
+            ++l_it;
+        }
+    }
+    return;
 }
 
 } // namespace
