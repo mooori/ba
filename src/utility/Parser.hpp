@@ -26,7 +26,7 @@ public:
 
     /**
      * Parse graph with vertex names of type int.
-     * @param fpn file name (incl. full path to file)
+     * @param fpn file name (incl. path relativ to calling location)
      * @return corresponding DSGraph
      * @throws std::runtime_error if input graph without vertices has edges
      */
