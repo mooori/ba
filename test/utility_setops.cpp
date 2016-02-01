@@ -1,3 +1,4 @@
+#include <list>
 #include <set>
 
 #include <gtest/gtest.h>
@@ -182,6 +183,81 @@ TEST_F(setopsTest, setminus) {
     EXPECT_EQ(s3_orig, setops::setminus_inp(s3_, s1_));
     s1_ = s1; s3_ = s3;
     EXPECT_EQ(s1_orig, setops::setminus_inp(s1_, s3_));
+}
+
+TEST_F(setopsTest, filterContainingV) {
+    typedef std::list< std::set<int> > list_set_t; 
+    
+    // _new
+    // l1 = { empty, empty }
+    list_set_t l1, l1_orig;
+    l1.push_back(empty); l1.push_back(empty);
+    l1_orig = l1;
+    list_set_t l1_mod = setops::filter_containing_v_new(l1, 666);
+    EXPECT_EQ(2, l1_mod.size());
+    EXPECT_EQ(l1_orig, l1_mod);
+
+    // l2 = { }
+    list_set_t l2;
+    list_set_t l2_mod = setops::filter_containing_v_new(l2, 666);
+    EXPECT_EQ(0, l2_mod.size());
+    EXPECT_EQ(list_set_t(), l2_mod);
+
+    // l3 = { s1, s2, s3 }
+    list_set_t l3, l3_orig;
+    l3.push_back(s1); l3.push_back(s2); l3.push_back(s3);
+    l3_orig = l3;
+    list_set_t l3_mod = setops::filter_containing_v_new(l3, 666);
+    list_set_t should3; should3.push_back(s3);
+    EXPECT_EQ(1, l3_mod.size());
+    EXPECT_EQ(should3, l3_mod);
+
+    // remove sth that isn't there
+    list_set_t l3_mod2 = setops::filter_containing_v_new(l3, 777);
+    EXPECT_EQ(3, l3_mod2.size());
+    EXPECT_EQ(l3_orig, l3_mod2);
+
+    // l4 = { s4, s5 }
+    list_set_t l4, l4_orig;
+    l4.push_back(s4); l4.push_back(s5);
+    l4_orig = l4;
+    list_set_t l4_mod = setops::filter_containing_v_new(l4, 21);
+    EXPECT_EQ(0, l4_mod.size());
+    EXPECT_EQ(list_set_t(), l4_mod);
+
+    // make sure _new funcs didn't modify input
+    EXPECT_EQ(l1_orig, l1);
+    EXPECT_EQ(list_set_t(), l2);
+    EXPECT_EQ(l3_orig, l3);
+    EXPECT_EQ(l4_orig, l4);
+
+    // _inp, may modify l1,...
+    // l1
+    setops::filter_containing_v_inp(l1, 666);
+    EXPECT_EQ(2, l1.size());
+    EXPECT_EQ(l1_orig, l1);
+
+    // l2
+    setops::filter_containing_v_inp(l2, 666);
+    EXPECT_EQ(0, l2.size());
+    EXPECT_EQ(list_set_t(), l2);
+
+    // l3
+    setops::filter_containing_v_inp(l3, 666);
+    EXPECT_EQ(1, l3.size());
+    EXPECT_EQ(should3, l3);
+    EXPECT_FALSE(l3 == l3_orig);
+
+    l3 = l3_orig;
+    setops::filter_containing_v_inp(l3, 777);
+    EXPECT_EQ(3, l3.size());
+    EXPECT_EQ(l3_orig, l3);
+
+    // l4
+    setops::filter_containing_v_inp(l4, 21);
+    EXPECT_EQ(0, l4.size());
+    EXPECT_EQ(list_set_t(), l4);
+    EXPECT_FALSE(l4 == l4_orig);
 }
 
 } // namespace
