@@ -89,6 +89,99 @@ TEST_F(setopsTest, Union) {
     EXPECT_EQ(res2, setops::union_inp(s3__, s1__));
 }
 
+TEST_F(setopsTest, bigUnion) {
+    typedef std::list< std::set<int> > list_set_t;
+
+    // _new
+    // l1 = empty list
+    list_set_t l1;
+    std::set<int> res1 = setops::big_union_new(l1);
+    list_set_t l1_orig = l1;
+    EXPECT_EQ(0, res1.size());
+    EXPECT_EQ(std::set<int>(), res1);
+
+    // l2 = { empty, empty }
+    list_set_t l2;
+    l2.push_back(empty); l2.push_back(empty);
+    list_set_t l2_orig = l2;
+    std::set<int> res2 = setops::big_union_new(l2);
+    EXPECT_EQ(0, res2.size());
+    EXPECT_EQ(std::set<int>(), res2);
+
+    // l3 = { s1 }
+    list_set_t l3;
+    l3.push_back(s1);
+    list_set_t l3_orig = l3;
+    std::set<int> res3 = setops::big_union_new(l3); 
+    EXPECT_EQ(2, res3.size());
+    EXPECT_EQ(s1, res3);
+
+    // l4 = { empty, s2 }
+    list_set_t l4;
+    l4.push_back(empty); l4.push_back(s2);
+    list_set_t l4_orig = l4;
+    std::set<int> res4 = setops::big_union_new(l4);
+    EXPECT_EQ(3, res4.size());
+    EXPECT_EQ(s2, res4);
+
+    // l5 = { s4, s5, s3 }
+    list_set_t l5;
+    l5.push_back(s4); l5.push_back(s5); l5.push_back(s3);
+    list_set_t l5_orig = l5;
+    std::set<int> res5 = setops::big_union_new(l5);
+    std::set<int> should5;
+    should5.insert(7); should5.insert(21); should5.insert(23);
+    should5.insert(666); should5.insert(777);
+    EXPECT_EQ(5, res5.size());
+    EXPECT_EQ(should5, res5);
+
+    // l6 = { s1, s4 }
+    list_set_t l6;
+    l6.push_back(s1); l6.push_back(s4);
+    list_set_t l6_orig = l6;
+    std::set<int> res6 = setops::big_union_new(l6);
+    std::set<int> should6;
+    should6.insert(13); should6.insert(666); should6.insert(21);
+    should6.insert(23); should6.insert(777);
+    EXPECT_EQ(5, res6.size());
+    EXPECT_EQ(should6, res6);
+
+    // make sure _new didn't modify any inputs
+    EXPECT_EQ(l1_orig, l1);
+    EXPECT_EQ(l2_orig, l2);
+    EXPECT_EQ(l3_orig, l3);
+    EXPECT_EQ(l4_orig, l4);
+    EXPECT_EQ(l5_orig, l5);
+    EXPECT_EQ(l6_orig, l6);
+
+    // _inp
+    std::set<int> res1_ = setops::big_union_inp(l1);
+    EXPECT_EQ(0, res1_.size());
+    EXPECT_EQ(std::set<int>(), res1_);
+
+    std::set<int> res2_ = setops::big_union_inp(l2);
+    EXPECT_EQ(0, res2_.size());
+    EXPECT_EQ(std::set<int>(), res2_);
+
+    std::set<int> res3_ = setops::big_union_inp(l3);
+    EXPECT_EQ(2, res3_.size());
+    EXPECT_EQ(s1, res3_);
+
+    std::set<int> res4_ = setops::big_union_inp(l4);
+    EXPECT_EQ(3, res4_.size());
+    EXPECT_EQ(s2, res4_);
+
+    std::set<int> res5_ = setops::big_union_inp(l5);
+    EXPECT_EQ(5, res5_.size());
+    EXPECT_EQ(should5, res5_);
+    EXPECT_FALSE(l5 == l5_orig);
+
+    std::set<int> res6_ = setops::big_union_inp(l6);
+    EXPECT_EQ(5, res6_.size());
+    EXPECT_EQ(should6, res6_);
+    EXPECT_FALSE(l6 == l6_orig);
+}
+
 TEST_F(setopsTest, inters) {
     // _new
     EXPECT_EQ(empty, setops::inters_new(s1, empty));
