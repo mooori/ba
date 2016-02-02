@@ -70,6 +70,62 @@ std::set<T> union_inp(std::set<T>& s1, std::set<T>& s2) {
 }
 
 /**
+ * Union of all sets (\bigcup) contained in list - input unchanged
+ * @param l list of sets
+ * @returns union of all sets in l
+ */
+template<typename T>
+std::set<T> big_union_new(std::list< std::set<T> >& l) {
+    // iterate over c, insert each element to set<T> res
+    std::set<T> res;
+
+    for(typename std::list< std::set<T> >::iterator l_it = l.begin();
+            l_it != l.end(); ++l_it) {
+        std::set<T>& s = *l_it;
+        for(typename std::set<T>::iterator s_it = s.begin();
+                s_it != s.end(); ++s_it) {
+            // duplicates expected, so don't check return val of insert
+            res.insert(*s_it);    
+        }
+    }
+
+    return res;
+}
+
+/**
+ * @see big_union_new, only diff: inputs changed
+ */
+template<typename T>
+std::set<T> big_union_inp(std::list< std::set<T> >& l) {
+    // find biggest set bs, then add all other set's els to bs
+
+    // return empty set if l.size() == 0 (avoid invalid set ref later)
+    if(l.size() == 0) { return std::set<T>(); }
+
+    // get and store iterator to biggest set, to know which one to skip later
+    // (comparison of sets with == would be too expensive)
+    typename std::list< std::set<T> >::iterator bs_pos = l.begin();
+    for(typename std::list< std::set<T> >::iterator l_it = l.begin();
+            l_it != l.end(); ++l_it) {
+        if(l_it->size() > bs_pos->size()) { bs_pos = l_it; }
+    }
+
+    // insert els of sets (except those of bs itself, of course)
+    for(typename std::list< std::set<T> >::iterator l_it2 = l.begin();
+            l_it2 != l.end(); ++l_it2) {
+        if(l_it2 == bs_pos) { continue; }
+        std::set<T>& s = *l_it2;
+        for(typename std::set<T>::iterator s_it = s.begin();
+                s_it != s.end(); ++s_it) {
+            // duplicates expected, so don't check ret val of insert
+            bs_pos->insert(*s_it);
+        }
+    }
+
+    return *bs_pos;
+}
+
+/**
  * Intersection of two sets, input sets unchanged
  */
 template<typename T>
