@@ -353,4 +353,32 @@ TEST_F(setopsTest, filterContainingV) {
     EXPECT_FALSE(l4 == l4_orig);
 }
 
+TEST_F(setopsTest, allEmpty) {
+    typedef std::list< std::set<int> > list_set_t;
+
+    // l1 = { }
+    list_set_t l1;
+    EXPECT_EQ(true, setops::all_empty(l1));
+
+    // l2 = { empty, empty }
+    list_set_t l2;
+    l2.push_back(empty); l2.push_back(empty);
+    EXPECT_EQ(true, setops::all_empty(l2));
+
+    // l3 = { s1, empty, s2 }
+    list_set_t l3;
+    l3.push_back(s1); l3.push_back(empty); l3.push_back(s2);
+    EXPECT_EQ(false, setops::all_empty(l3));
+
+    // l4 = { s3 }
+    list_set_t l4;
+    l4.push_back(s3);
+    EXPECT_EQ(false, setops::all_empty(l4));
+
+    // l5 = { empty, s4, s5 }
+    list_set_t l5;
+    l5.push_back(empty); l5.push_back(s4); l5.push_back(s5);
+    EXPECT_EQ(false, setops::all_empty(l5));
+}
+
 } // namespace
