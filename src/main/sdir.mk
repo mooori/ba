@@ -1,1 +1,1 @@
-SRC += main/main.cpp
+SRC += main/main.cpp main/FuncIter.cpp
