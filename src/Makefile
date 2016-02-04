@@ -2,7 +2,7 @@
 # http://aegis.sourceforge.net/auug97.pdf
 
 CXX = g++
-CXXFLAGS = -c -Wall -O2 -I ../boost_1_59_0    # -O2 req for boost
+CXXFLAGS = -c -std=c++11 -Wall -O2 -I ../boost_1_60_0    # -O2 req for boost
 
 SDIRS := main types utility visitors
 
