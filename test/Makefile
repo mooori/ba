@@ -11,7 +11,7 @@ CXX = g++
 # the compiler doesn't generate warnings in Google Test headers.
 CPPFLAGS = -isystem $(GTEST_DIR)/include
 
-CXXFLAGS = -g -Wall -Wextra -pthread
+CXXFLAGS = -g -Wall -std=c++11 -Wextra -pthread
 
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
                 $(GTEST_DIR)/include/gtest/internal/*.h
@@ -47,8 +47,8 @@ gtest_main.a : gtest-all.o gtest_main.o
 # Tests
 SRC := $(wildcard *.cpp)
 OBJ := $(SRC:.cpp=.o)
-LINK := ../src/utility/Parser.o
-LIBS := ../boost_1_59_0
+LINK := ../src/utility/Parser.o ../src/main/FuncIter.o
+LIBS := ../boost_1_60_0
 
 test: $(OBJ) $(GTEST_DIR)/make/gtest.a $(LINK)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
@@ -56,7 +56,7 @@ test: $(OBJ) $(GTEST_DIR)/make/gtest.a $(LINK)
 include $(OBJ:.o=.d)
 
 ./%.o: ./%.cpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I ../boost_1_59_0 -c $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I ../boost_1_60_0 -c $<
 
 %.d: %.cpp
 	./depend.sh $(CXXFLAGS) $*.cpp > $@
