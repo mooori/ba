@@ -8,6 +8,7 @@
 
 #include "Distance.hpp"
 #include "FuncIter.hpp"
+#include "SubsetGen.hpp"
 #include "../types/dstypes.hpp"
 #include "../utility/Parser.hpp"
 #include "../utility/setops.hpp"
@@ -30,8 +31,16 @@ int main() {
     std::cout << "fnumber[0] = " << f.get_digit_val(0) << std::endl;
     std::cout << "fnumber[1] = " << f.get_digit_val(1) << std::endl;
 
-    FuncIter f2(0, 3);
+    FuncIter f2(6, 3);
     //FuncIter f3(3, 0);
+
+    std::vector<int> v;
+    v.push_back(11); v.push_back(22); v.push_back(33); v.push_back(44);
+    SubsetGen<int> sg(v);
+    sg.get_subsets(4);
+    sg.print_ssets();
+    sg.get_subsets(3);
+    sg.print_ssets();
 
     return 0;
 }
