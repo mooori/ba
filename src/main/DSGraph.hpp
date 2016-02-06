@@ -29,14 +29,14 @@ public:
     /**
      * Get number of G's vertices
      */
-    BGraph::vertices_size_type num_vertices();
+    BGraph::vertices_size_type num_vertices() const;
 
     /**
      * Get BVertex iterator
      * @returns std::pair of vertex iterators, first pointing to beginning of
      *     vertex array, second past the end, @see BGL quick tour
      */
-    std::pair<BVertex_it, BVertex_it> vertices(); 
+    std::pair<BVertex_it, BVertex_it> vertices() const; 
 
     /**
      * Get BEdge iterator
@@ -81,19 +81,19 @@ public:
      * Get BVertex by IVertex
      * @throws std::out_of_range if vertex not present
      */
-    BVertex get_BVertex(IVertex vid);
+    BVertex get_BVertex(IVertex vid) const;
 
     /**
      * Get IVertex by BVertex
      * @throws std::out_of_range if vertex not present
      */
-    IVertex get_IVertex(BVertex bvid);
+    IVertex get_IVertex(BVertex bvid) const;
 
     /**
      * Get IEdge by BEdge
      * @throws @see get_IVertex
      */
-    IEdge get_IEdge(BEdge be);
+    IEdge get_IEdge(BEdge be) const;
 
     /**
      * Get BVertices adjacent to BVertex
@@ -101,7 +101,7 @@ public:
      * @returns std::set of adjacent BVertices
      * @throws std::runtime_error if a bvid appears more than once in adj list
      */
-    std::set<BVertex> get_adj_BVertices(BVertex bvid);
+    std::set<BVertex> get_adj_BVertices(BVertex bvid) const;
 
     /**
      * Get IVertices adjacent to IVertex
@@ -110,7 +110,7 @@ public:
      * @throws @see get_IVertex and std::runtime_error if a vid appears more
      *     than once in adj list.
      */
-    std::set<IVertex> get_adj_IVertices(IVertex vid);
+    std::set<IVertex> get_adj_IVertices(IVertex vid) const;
 
     /**
      * Remove BVertex
@@ -130,7 +130,7 @@ public:
      * @throws std::runtime_error, if inserting vertex in set fails, since
      *     vertices must be unique.
      */
-    std::set<BVertex> get_set_BVertices();
+    std::set<BVertex> get_set_BVertices() const;
 
 private:
     /** type of map from input to boost vertex */

@@ -21,11 +21,11 @@ DSGraph::~DSGraph() {
     delete color_H;
 }
 
-BGraph::vertices_size_type DSGraph::num_vertices() {
+BGraph::vertices_size_type DSGraph::num_vertices() const {
     return boost::num_vertices(*(this->G));
 }
 
-std::pair<BVertex_it, BVertex_it> DSGraph::vertices() {
+std::pair<BVertex_it, BVertex_it> DSGraph::vertices() const {
     return boost::vertices(*(this->G));
 }
 
@@ -80,28 +80,28 @@ void DSGraph::add_IEdges(std::list<IEdge>& es) {
     return;
 }
 
-BVertex DSGraph::get_BVertex(IVertex vid) {
-    map_v_I2B_t::iterator it = this->map_v_I2B.find(vid);
+BVertex DSGraph::get_BVertex(IVertex vid) const {
+    map_v_I2B_t::const_iterator it = this->map_v_I2B.find(vid);
     if(it == map_v_I2B.end()) {
         throw std::out_of_range("IVertex not in G");
     }
     return it->second;
 }
 
-IVertex DSGraph::get_IVertex(BVertex bvid) {
-    map_v_B2I_t::iterator it = this->map_v_B2I.find(bvid);
+IVertex DSGraph::get_IVertex(BVertex bvid) const {
+    map_v_B2I_t::const_iterator it = this->map_v_B2I.find(bvid);
     if(it == map_v_B2I.end()) {
         throw std::out_of_range("BVertex not in G");
     }
     return it->second;
 }
 
-IEdge DSGraph::get_IEdge(BEdge be) {
+IEdge DSGraph::get_IEdge(BEdge be) const {
     return IEdge(this->get_IVertex(boost::source(be, *(this->G))),
             this->get_IVertex(boost::target(be, *(this->G))));
 }
 
-std::set<BVertex> DSGraph::get_adj_BVertices(BVertex bvid) {
+std::set<BVertex> DSGraph::get_adj_BVertices(BVertex bvid) const {
     std::pair<B_adj_it, B_adj_it> adj_it = 
             boost::adjacent_vertices(bvid, *(this->G));
     std::set<BVertex> adj_verts;
@@ -117,7 +117,7 @@ std::set<BVertex> DSGraph::get_adj_BVertices(BVertex bvid) {
     return adj_verts;
 }
 
-std::set<IVertex> DSGraph::get_adj_IVertices(IVertex vid) {
+std::set<IVertex> DSGraph::get_adj_IVertices(IVertex vid) const {
     std::pair<B_adj_it, B_adj_it> adj_it =
             boost::adjacent_vertices(this->get_BVertex(vid), *(this->G));
     std::set<IVertex> adj_verts;
@@ -147,7 +147,7 @@ void DSGraph::remove_IVertex(IVertex vid) {
     return;
 }
 
-std::set<BVertex> DSGraph::get_set_BVertices() {
+std::set<BVertex> DSGraph::get_set_BVertices() const {
     // iterate over vertices and insert each to set
     std::set<BVertex> s;
     std::pair<BVertex_it, BVertex_it> v_it = this->vertices();
