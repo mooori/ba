@@ -197,8 +197,38 @@ TEST(DSGraph, removeVertex) {
     // there, just dumps core. Would be too ugly to test.
 }
 
+TEST(DSGraph, getSetBVertices) {
+    // empty graph
+    DSGraph dsg1;
+    std::set<BVertex> res1 = dsg1.get_set_BVertices();
+    EXPECT_EQ(0, res1.size());
+    EXPECT_EQ(std::set<BVertex>(), res1);
+
+    // graph with some vertices
+    DSGraph dsg2;
+    dsg2.add_IVertex(13);
+    dsg2.add_IVertex(21);
+    dsg2.add_IVertex(666);
+    std::set<BVertex> exp2;
+    exp2.insert(dsg2.get_BVertex(13));
+    exp2.insert(dsg2.get_BVertex(21));
+    exp2.insert(dsg2.get_BVertex(666));
+    std::set<BVertex> res2 = dsg2.get_set_BVertices();
+    EXPECT_EQ(3, res2.size());
+    EXPECT_EQ(exp2, res2);
+
+    // graph with single vertex
+    DSGraph dsg3;
+    dsg3.add_IVertex(77);
+    std::set<BVertex> exp3;
+    exp3.insert(dsg3.get_BVertex(77));
+    std::set<BVertex> res3 = dsg3.get_set_BVertices();
+    EXPECT_EQ(1, res3.size());
+    EXPECT_EQ(exp3, res3);
+}
+
 TEST(DSGraph, stuff) {
-    // test for functions not (indirectly) tested in graphConstruction
+    // test for functions not (indirectly) anywhere else
     // get_IEdge
     DSGraph dsg1;
     dsg1.add_IVertex(0); dsg1.add_IVertex(1); dsg1.add_IVertex(2);
