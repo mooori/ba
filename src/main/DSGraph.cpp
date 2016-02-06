@@ -13,10 +13,12 @@ DSGraph::DSGraph()
     : G(new BGraph())
     , map_v_I2B(map_v_I2B_t())
     , map_v_B2I(map_v_B2I_t())
+    , color_H(new std::set<BVertex>())
     { }
 
 DSGraph::~DSGraph() {
     delete G;
+    delete color_H;
 }
 
 BGraph::vertices_size_type DSGraph::num_vertices() {
