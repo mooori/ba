@@ -225,6 +225,32 @@ TEST(DSGraph, getSetBVertices) {
     std::set<BVertex> res3 = dsg3.get_set_BVertices();
     EXPECT_EQ(1, res3.size());
     EXPECT_EQ(exp3, res3);
+
+    // g1.txt
+    Parser p;
+    DSGraph dsg4 = p.parse_graph_int("graphs/g1.txt");
+    std::set<BVertex> exp4;
+    exp4.insert(dsg4.get_BVertex(0)); exp4.insert(dsg4.get_BVertex(1));
+    exp4.insert(dsg4.get_BVertex(2)); exp4.insert(dsg4.get_BVertex(3));
+    exp4.insert(dsg4.get_BVertex(4)); exp4.insert(dsg4.get_BVertex(5));
+    std::set<BVertex> res4 = dsg4.get_set_BVertices();
+    EXPECT_EQ(6, res4.size());
+    EXPECT_EQ(exp4, res4);
+
+    // remove a vertex from dsg4
+    exp4.erase(dsg4.get_BVertex(3));
+    dsg4.remove_IVertex(3);
+    res4 = dsg4.get_set_BVertices();
+    EXPECT_EQ(5, res4.size());
+    EXPECT_EQ(exp4, res4);
+
+    // add two vertices to dsg4
+    dsg4.add_IVertex(666);
+    dsg4.add_IVertex(777);
+    exp4.insert(dsg4.get_BVertex(666)); exp4.insert(dsg4.get_BVertex(777));
+    res4 = dsg4.get_set_BVertices();
+    EXPECT_EQ(7, res4.size());
+    EXPECT_EQ(exp4, res4);
 }
 
 TEST(DSGraph, stuff) {
