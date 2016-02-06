@@ -145,6 +145,21 @@ void DSGraph::remove_IVertex(IVertex vid) {
     return;
 }
 
+std::set<BVertex> DSGraph::get_set_BVertices() {
+    // iterate over vertices and insert each to set
+    std::set<BVertex> s;
+    std::pair<BVertex_it, BVertex_it> v_it = this->vertices();
+    for( ; v_it.first != v_it.second; ++v_it.first) {
+        std::pair<std::set<BVertex>::iterator, bool> ins =
+                s.insert(*v_it.first);
+        if(!ins.second) {
+            throw std::runtime_error("failed to insert BVertex in set");
+        }
+    }
+    return s;
+}
+
+
 void DSGraph::maps_remove_BVertex(BVertex bvid) {
     IVertex vid = this->get_IVertex(bvid);
     if(this->map_v_I2B.erase(vid) != 1) {

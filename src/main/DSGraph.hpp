@@ -125,6 +125,13 @@ public:
      */
     void remove_IVertex(IVertex vid);
 
+    /**
+     * Get set of BGraph's BVertices
+     * @throws std::runtime_error, if inserting vertex in set fails, since
+     *     vertices must be unique.
+     */
+    std::set<BVertex> get_set_BVertices();
+
 private:
     /** type of map from input to boost vertex */
     typedef std::map<IVertex, BVertex> map_v_I2B_t;
@@ -139,9 +146,7 @@ private:
      */
     map_v_I2B_t map_v_I2B;
 
-    /**
-     * map[bid] = oid, @see map_oid_bid
-     */
+    /** map[bid] = oid, @see map_oid_bid */
     map_v_B2I_t map_v_B2I;
 
     /**
