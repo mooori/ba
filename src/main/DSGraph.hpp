@@ -1,14 +1,10 @@
 #ifndef DSGRAPH_H
 #define DSGRAPH_H
 
-#include <algorithm>
+#include <list>
+#include <map>
 #include <set>
-#include <stdexcept>
-#include <string>
 #include <utility>
-
-#include <boost/config.hpp>
-#include <boost/graph/adjacency_list.hpp>
 
 #include "../types/dstypes.hpp"
 
