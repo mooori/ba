@@ -253,6 +253,111 @@ TEST(DSGraph, getSetBVertices) {
     EXPECT_EQ(exp4, res4);
 }
 
+TEST(DSGraph, containsVertex) {
+    // Build up graph
+    DSGraph dsg1;
+    EXPECT_EQ(false, dsg1.contains_BVertex(BVertex()));
+    EXPECT_EQ(false, dsg1.contains_IVertex(666));
+    dsg1.add_IVertex(7);
+    dsg1.add_IVertex(13);
+    EXPECT_EQ(true, dsg1.contains_BVertex(dsg1.get_BVertex(7)));
+    EXPECT_EQ(true, dsg1.contains_IVertex(7));
+    EXPECT_EQ(true, dsg1.contains_BVertex(dsg1.get_BVertex(13)));
+    EXPECT_EQ(true, dsg1.contains_IVertex(13));
+
+    // remove vertex
+    BVertex bvid_7 = dsg1.get_BVertex(7);
+    dsg1.remove_IVertex(7);
+    EXPECT_EQ(true, dsg1.contains_BVertex(dsg1.get_BVertex(13)));
+    EXPECT_EQ(true, dsg1.contains_IVertex(13));
+    EXPECT_EQ(false, dsg1.contains_BVertex(bvid_7));
+    EXPECT_EQ(false, dsg1.contains_IVertex(7));
+
+    // g_distance.txt
+    DSGraph dsg2 = Parser().parse_graph_int("graphs/g_distance.txt");
+    EXPECT_EQ(false, dsg2.contains_BVertex(BVertex()));
+    EXPECT_EQ(false, dsg2.contains_IVertex(666));
+    for(int i = 0; i <= 12; ++i) {
+        EXPECT_EQ(true, dsg2.contains_BVertex(dsg2.get_BVertex(i)));
+        EXPECT_EQ(true, dsg2.contains_IVertex(i));
+    }
+
+    // remove vertex
+    BVertex bvid_9 = dsg2.get_BVertex(9);
+    dsg2.remove_IVertex(9);
+    EXPECT_EQ(false, dsg2.contains_BVertex(bvid_9));
+    EXPECT_EQ(false, dsg2.contains_IVertex(9));
+    EXPECT_EQ(true, dsg2.contains_BVertex(dsg2.get_BVertex(12)));
+    EXPECT_EQ(true, dsg2.contains_IVertex(12));
+}
+
+TEST(DSGraph, inAdjList) {
+    // build up graph
+    DSGraph dsg1;
+    EXPECT_THROW(dsg1.in_adj_list_I(666, 777), std::out_of_range);
+    // if BVertex bvid1 isn't there, boost dumps
+
+    dsg1.add_IVertex(11); dsg1.add_IVertex(22); dsg1.add_IVertex(33);
+
+    dsg1.add_IEdge(IEdge(11, 22));
+    EXPECT_EQ(true, dsg1.in_adj_list_B(dsg1.get_BVertex(11),
+            dsg1.get_BVertex(22)));
+    EXPECT_EQ(true, dsg1.in_adj_list_B(dsg1.get_BVertex(22),
+            dsg1.get_BVertex(11)));
+    EXPECT_EQ(true, dsg1.in_adj_list_I(11, 22));
+    EXPECT_EQ(true, dsg1.in_adj_list_I(22, 11));
+
+    EXPECT_EQ(false, dsg1.in_adj_list_B(dsg1.get_BVertex(11),
+            dsg1.get_BVertex(33)));
+    EXPECT_EQ(false, dsg1.in_adj_list_B(dsg1.get_BVertex(33),
+            dsg1.get_BVertex(11)));
+    EXPECT_EQ(false, dsg1.in_adj_list_I(11, 33));
+    EXPECT_EQ(false, dsg1.in_adj_list_I(33, 11));
+
+    EXPECT_EQ(false, dsg1.in_adj_list_I(11, 666));
+    EXPECT_THROW(dsg1.in_adj_list_I(666, 11), std::out_of_range);
+
+    // remove IVertex
+    BVertex bvid1_22 = dsg1.get_BVertex(22);
+    dsg1.remove_IVertex(22);
+    EXPECT_EQ(false, dsg1.in_adj_list_B(dsg1.get_BVertex(11), bvid1_22));
+    // (bvid1_22, get_BVertex(11)) dumps (boost)
+    EXPECT_EQ(false, dsg1.in_adj_list_I(11, 22));
+    EXPECT_THROW(dsg1.in_adj_list_I(22, 11), std::out_of_range);
+
+    // g_distance
+    DSGraph dsg2 = Parser().parse_graph_int("graphs/g_distance.txt");
+
+    EXPECT_EQ(true, dsg2.in_adj_list_B(dsg2.get_BVertex(9),
+            dsg2.get_BVertex(11)));
+    EXPECT_EQ(true, dsg2.in_adj_list_B(dsg2.get_BVertex(11),
+            dsg2.get_BVertex(9)));
+    EXPECT_EQ(true, dsg2.in_adj_list_I(9, 11));
+    EXPECT_EQ(true, dsg2.in_adj_list_I(11, 9));
+
+    EXPECT_EQ(false, dsg2.in_adj_list_B(dsg2.get_BVertex(9),
+            dsg2.get_BVertex(4)));
+    EXPECT_EQ(false, dsg2.in_adj_list_B(dsg2.get_BVertex(4),
+            dsg2.get_BVertex(9)));
+    EXPECT_EQ(false, dsg2.in_adj_list_I(9, 4));
+    EXPECT_EQ(false, dsg2.in_adj_list_I(4, 9));
+
+    // remove IVertex
+    BVertex bvid2_11 = dsg2.get_BVertex(11);
+    dsg2.remove_IVertex(11);
+    EXPECT_EQ(false, dsg2.in_adj_list_B(dsg2.get_BVertex(9), bvid2_11));
+    // (bvid2_11, get_BVertex(9)) dumps (boost)
+    EXPECT_EQ(false, dsg2.in_adj_list_I(9, 11));
+    EXPECT_THROW(dsg2.in_adj_list_I(11, 9), std::out_of_range);
+
+    EXPECT_EQ(true, dsg2.in_adj_list_B(dsg2.get_BVertex(9),
+            dsg2.get_BVertex(12)));
+    EXPECT_EQ(true, dsg2.in_adj_list_B(dsg2.get_BVertex(12),
+            dsg2.get_BVertex(9)));
+    EXPECT_EQ(true, dsg2.in_adj_list_I(9, 12));
+    EXPECT_EQ(true, dsg2.in_adj_list_I(12, 9));
+}
+
 TEST(DSGraph, stuff) {
     // test for functions not (indirectly) anywhere else
     // get_IEdge
