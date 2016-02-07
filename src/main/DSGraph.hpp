@@ -107,8 +107,7 @@ public:
      * Get IVertices adjacent to IVertex
      * @param vid IVertex of which adj vertices are requested
      * @returns std::set of adjacent IVertices
-     * @throws @see get_IVertex and std::runtime_error if a vid appears more
-     *     than once in adj list.
+     * @throws @see get_IVertex @see get_adj_BVertices
      */
     std::set<IVertex> get_adj_IVertices(IVertex vid) const;
 
@@ -131,6 +130,18 @@ public:
      *     vertices must be unique.
      */
     std::set<BVertex> get_set_BVertices() const;
+
+    /** Check if DSGraph contains BVertex */
+    bool contains_BVertex(const BVertex bvid) const;
+
+    /** Check if DSGraph contains IVertex */
+    bool contains_IVertex(const IVertex vid) const;
+
+    /** Return true if bvid2 is in adj list of bvid1 */
+    bool in_adj_list_B(const BVertex bvid1, const BVertex bvid2) const;
+
+    /** Return true if vid2 is in adj list of vid1 */
+    bool in_adj_list_I(const IVertex vid1, const IVertex vid2) const;
 
 private:
     /** type of map from input to boost vertex */

@@ -161,6 +161,27 @@ std::set<BVertex> DSGraph::get_set_BVertices() const {
     return s;
 }
 
+bool DSGraph::contains_BVertex(const BVertex bvid) const {
+    map_v_B2I_t::const_iterator it = this->map_v_B2I.find(bvid);
+    return it != this->map_v_B2I.end();
+}
+
+bool DSGraph::contains_IVertex(const IVertex vid) const {
+    map_v_I2B_t::const_iterator it = this->map_v_I2B.find(vid);
+    return it != this->map_v_I2B.end();
+}
+
+bool DSGraph::in_adj_list_B(const BVertex bvid1, const BVertex bvid2) const {
+    std::set<BVertex> N1 = this->get_adj_BVertices(bvid1);
+    std::set<BVertex>::const_iterator it = N1.find(bvid2);
+    return it != N1.end();
+}
+
+bool DSGraph::in_adj_list_I(const IVertex vid1, const IVertex vid2) const {
+    std::set<IVertex> N1 = this->get_adj_IVertices(vid1);
+    std::set<IVertex>::const_iterator it = N1.find(vid2);
+    return it != N1.end();
+}
 
 void DSGraph::maps_remove_BVertex(BVertex bvid) {
     IVertex vid = this->get_IVertex(bvid);
