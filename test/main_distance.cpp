@@ -1,8 +1,5 @@
 #include <list>
 
-#include <boost/config.hpp>
-#include <boost/graph/adjacency_list.hpp>
-
 #include <gtest/gtest.h>
 
 #include "../src/types/dstypes.hpp"
