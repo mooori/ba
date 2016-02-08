@@ -200,55 +200,78 @@ TEST(DSGraph, removeVertex) {
 TEST(DSGraph, getSetBVertices) {
     // empty graph
     DSGraph dsg1;
-    std::set<BVertex> res1 = dsg1.get_set_BVertices();
-    EXPECT_EQ(0, res1.size());
-    EXPECT_EQ(std::set<BVertex>(), res1);
+    std::set<BVertex> res1B = dsg1.get_set_BVertices();
+    EXPECT_EQ(0, res1B.size());
+    EXPECT_EQ(std::set<BVertex>(), res1B);
+    std::set<IVertex> res1I = dsg1.get_set_IVertices();
+    EXPECT_EQ(0, res1I.size());
+    EXPECT_EQ(std::set<IVertex>(), res1I);
 
     // graph with some vertices
     DSGraph dsg2;
     dsg2.add_IVertex(13);
     dsg2.add_IVertex(21);
     dsg2.add_IVertex(666);
-    std::set<BVertex> exp2{ 
+    std::set<BVertex> exp2B{ 
         dsg2.get_BVertex(13), dsg2.get_BVertex(21), dsg2.get_BVertex(666)
     };
-    std::set<BVertex> res2 = dsg2.get_set_BVertices();
-    EXPECT_EQ(3, res2.size());
-    EXPECT_EQ(exp2, res2);
+    std::set<BVertex> res2B = dsg2.get_set_BVertices();
+    EXPECT_EQ(3, res2B.size());
+    EXPECT_EQ(exp2B, res2B);
+    std::set<IVertex> exp2I{ 13, 21, 666 };
+    std::set<IVertex> res2I = dsg2.get_set_IVertices();
+    EXPECT_EQ(3, res2I.size());
+    EXPECT_EQ(exp2I, res2I);
 
     // graph with single vertex
     DSGraph dsg3;
     dsg3.add_IVertex(77);
-    std::set<BVertex> exp3{ dsg3.get_BVertex(77) };
-    std::set<BVertex> res3 = dsg3.get_set_BVertices();
-    EXPECT_EQ(1, res3.size());
-    EXPECT_EQ(exp3, res3);
+    std::set<BVertex> exp3B{ dsg3.get_BVertex(77) };
+    std::set<BVertex> res3B = dsg3.get_set_BVertices();
+    EXPECT_EQ(1, res3B.size());
+    EXPECT_EQ(exp3B, res3B);
+    std::set<IVertex> exp3I = { 77 };
+    std::set<IVertex> res3I = dsg3.get_set_IVertices();
+    EXPECT_EQ(1, res3I.size());
+    EXPECT_EQ(exp3I, res3I);
 
     // g1.txt
     Parser p;
     DSGraph dsg4 = p.parse_graph_int("graphs/g1.txt");
-    std::set<BVertex> exp4 {
+    std::set<BVertex> exp4B {
         dsg4.get_BVertex(0), dsg4.get_BVertex(1), dsg4.get_BVertex(2), 
         dsg4.get_BVertex(3), dsg4.get_BVertex(4), dsg4.get_BVertex(5)
     };
-    std::set<BVertex> res4 = dsg4.get_set_BVertices();
-    EXPECT_EQ(6, res4.size());
-    EXPECT_EQ(exp4, res4);
+    std::set<BVertex> res4B = dsg4.get_set_BVertices();
+    EXPECT_EQ(6, res4B.size());
+    EXPECT_EQ(exp4B, res4B);
+    std::set<IVertex> exp4I = { 0, 1, 2, 3, 4, 5 };
+    std::set<IVertex> res4I = dsg4.get_set_IVertices();
+    EXPECT_EQ(6, res4I.size());
+    EXPECT_EQ(exp4I, res4I);
 
     // remove a vertex from dsg4
-    exp4.erase(dsg4.get_BVertex(3));
+    exp4B.erase(dsg4.get_BVertex(3));
     dsg4.remove_IVertex(3);
-    res4 = dsg4.get_set_BVertices();
-    EXPECT_EQ(5, res4.size());
-    EXPECT_EQ(exp4, res4);
+    res4B = dsg4.get_set_BVertices();
+    EXPECT_EQ(5, res4B.size());
+    EXPECT_EQ(exp4B, res4B);
+    exp4I.erase(3);
+    res4I = dsg4.get_set_IVertices();
+    EXPECT_EQ(5, res4I.size());
+    EXPECT_EQ(exp4I, res4I);
 
     // add two vertices to dsg4
     dsg4.add_IVertex(666);
     dsg4.add_IVertex(777);
-    exp4.insert(dsg4.get_BVertex(666)); exp4.insert(dsg4.get_BVertex(777));
-    res4 = dsg4.get_set_BVertices();
-    EXPECT_EQ(7, res4.size());
-    EXPECT_EQ(exp4, res4);
+    exp4B.insert(dsg4.get_BVertex(666)); exp4B.insert(dsg4.get_BVertex(777));
+    res4B = dsg4.get_set_BVertices();
+    EXPECT_EQ(7, res4B.size());
+    EXPECT_EQ(exp4B, res4B);
+    exp4I.insert(666); exp4I.insert(777);
+    res4I = dsg4.get_set_IVertices();
+    EXPECT_EQ(7, res4I.size());
+    EXPECT_EQ(exp4I, res4I);
 }
 
 TEST(DSGraph, containsVertex) {
