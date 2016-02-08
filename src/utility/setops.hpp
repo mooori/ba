@@ -255,9 +255,10 @@ void filter_containing_v_inp(
 /**
  * Return true if all sets in input list are empty - inp unchanged
  */
-bool all_empty(std::list< std::set<int> >& l) {
+template<typename T>
+bool all_empty(std::list< std::set<T> >& l) {
     // iterate over list, return false if non-empty set met
-    for(typename std::list< std::set<int> >::iterator l_it = l.begin();
+    for(typename std::list< std::set<T> >::iterator l_it = l.begin();
             l_it != l.end(); ++l_it) {
         if(l_it->size() > 0) { return false; }
     }
