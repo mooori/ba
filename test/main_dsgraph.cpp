@@ -209,10 +209,9 @@ TEST(DSGraph, getSetBVertices) {
     dsg2.add_IVertex(13);
     dsg2.add_IVertex(21);
     dsg2.add_IVertex(666);
-    std::set<BVertex> exp2;
-    exp2.insert(dsg2.get_BVertex(13));
-    exp2.insert(dsg2.get_BVertex(21));
-    exp2.insert(dsg2.get_BVertex(666));
+    std::set<BVertex> exp2{ 
+        dsg2.get_BVertex(13), dsg2.get_BVertex(21), dsg2.get_BVertex(666)
+    };
     std::set<BVertex> res2 = dsg2.get_set_BVertices();
     EXPECT_EQ(3, res2.size());
     EXPECT_EQ(exp2, res2);
@@ -220,8 +219,7 @@ TEST(DSGraph, getSetBVertices) {
     // graph with single vertex
     DSGraph dsg3;
     dsg3.add_IVertex(77);
-    std::set<BVertex> exp3;
-    exp3.insert(dsg3.get_BVertex(77));
+    std::set<BVertex> exp3{ dsg3.get_BVertex(77) };
     std::set<BVertex> res3 = dsg3.get_set_BVertices();
     EXPECT_EQ(1, res3.size());
     EXPECT_EQ(exp3, res3);
@@ -229,10 +227,10 @@ TEST(DSGraph, getSetBVertices) {
     // g1.txt
     Parser p;
     DSGraph dsg4 = p.parse_graph_int("graphs/g1.txt");
-    std::set<BVertex> exp4;
-    exp4.insert(dsg4.get_BVertex(0)); exp4.insert(dsg4.get_BVertex(1));
-    exp4.insert(dsg4.get_BVertex(2)); exp4.insert(dsg4.get_BVertex(3));
-    exp4.insert(dsg4.get_BVertex(4)); exp4.insert(dsg4.get_BVertex(5));
+    std::set<BVertex> exp4 {
+        dsg4.get_BVertex(0), dsg4.get_BVertex(1), dsg4.get_BVertex(2), 
+        dsg4.get_BVertex(3), dsg4.get_BVertex(4), dsg4.get_BVertex(5)
+    };
     std::set<BVertex> res4 = dsg4.get_set_BVertices();
     EXPECT_EQ(6, res4.size());
     EXPECT_EQ(exp4, res4);
