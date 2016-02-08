@@ -125,11 +125,18 @@ public:
     void remove_IVertex(IVertex vid);
 
     /**
-     * Get set of BGraph's BVertices
+     * Get set of Graph's BVertices
      * @throws std::runtime_error, if inserting vertex in set fails, since
      *     vertices must be unique.
      */
     std::set<BVertex> get_set_BVertices() const;
+
+    /**
+     * Get set of Graph's IVertices
+     * @throws std::runtime_error if inserting vertex in set fails, since
+     *     vertices must be unique.
+     */
+    std::set<IVertex> get_set_IVertices() const;
 
     /** Check if DSGraph contains BVertex */
     bool contains_BVertex(const BVertex bvid) const;

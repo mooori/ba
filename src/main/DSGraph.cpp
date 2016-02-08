@@ -161,6 +161,20 @@ std::set<BVertex> DSGraph::get_set_BVertices() const {
     return s;
 }
 
+std::set<IVertex> DSGraph::get_set_IVertices() const {
+    // iterate over vertices and insert each to set
+    std::set<IVertex> s;
+    std::pair<BVertex_it, BVertex_it> v_it = this->vertices();
+    for( ; v_it.first != v_it.second; ++v_it.first) {
+        std::pair<std::set<IVertex>::iterator, bool> ins =
+                s.insert(this->get_IVertex(*v_it.first));
+        if(!ins.second) {
+            throw std::runtime_error("failed to insert IVertex in set");
+        }
+    }
+    return s;
+}
+
 bool DSGraph::contains_BVertex(const BVertex bvid) const {
     map_v_B2I_t::const_iterator it = this->map_v_B2I.find(bvid);
     return it != this->map_v_B2I.end();
