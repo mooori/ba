@@ -8,6 +8,7 @@
 
 #include "Distance.hpp"
 #include "FuncIter.hpp"
+#include "MinHS.hpp"
 #include "SubsetGen.hpp"
 #include "WComps.hpp"
 #include "../types/dstypes.hpp"
