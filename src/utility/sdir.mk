@@ -1,1 +1,1 @@
-SRC += utility/Parser.cpp
+SRC += utility/Parser.cpp utility/constants.cpp

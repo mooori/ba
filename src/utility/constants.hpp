@@ -2,7 +2,7 @@
 #define CONSTANTS_H
 
 namespace constants {
-    int distance_init = -1;
+    extern int distance_init;
 }
 
 #endif

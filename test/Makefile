@@ -48,7 +48,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 SRC := $(wildcard *.cpp)
 OBJ := $(SRC:.cpp=.o)
 LINK := ../src/utility/Parser.o ../src/main/DSGraph.o ../src/main/FuncIter.o \
-		../src/main/MinHS.o ../src/main/WComps.o
+		../src/main/MinHS.o ../src/main/WComps.o ../src/utility/constants.o
 LIBS := ../boost_1_60_0
 
 test: $(OBJ) $(GTEST_DIR)/make/gtest.a $(LINK)
