@@ -167,9 +167,6 @@ private:
     /** map[bid] = oid, @see map_oid_bid */
     map_v_B2I_t map_v_B2I;
 
-    /** RGDS's H color */
-    std::set<BVertex>* color_H;
-
     /**
      * Remove BVertex from both maps
      * @throws std::runtime_error if BVertex not in maps
