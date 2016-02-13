@@ -15,6 +15,22 @@ DSGraph::DSGraph()
     , map_v_B2I(map_v_B2I_t())
     { }
 
+DSGraph::DSGraph(const DSGraph& DSG)
+    : G(new BGraph())
+    , map_v_I2B(map_v_I2B_t())
+    , map_v_B2I(map_v_B2I_t())
+    {
+       std::set<IVertex> vids = DSG.get_set_IVertices();
+       for(std::set<IVertex>::iterator v_it = vids.begin();
+               v_it != vids.end(); ++v_it) { 
+           this->add_IVertex(*v_it);
+       }
+       std::pair<BEdge_it, BEdge_it> e_it = DSG.edges();
+       for( ; e_it.first != e_it.second; ++e_it.first) {
+           this->add_IEdge(DSG.get_IEdge(*e_it.first));
+       }
+    }
+
 DSGraph::~DSGraph() {
     delete G;
 }
@@ -27,7 +43,7 @@ std::pair<BVertex_it, BVertex_it> DSGraph::vertices() const {
     return boost::vertices(*(this->G));
 }
 
-std::pair<BEdge_it, BEdge_it> DSGraph:: edges() {
+std::pair<BEdge_it, BEdge_it> DSGraph:: edges() const {
     return boost::edges(*(this->G));
 }
 

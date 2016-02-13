@@ -20,6 +20,11 @@ public:
     /** Constructor, initialisation with empty default objects */
     DSGraph();
 
+    /**
+     * Copy constructor: add dsg's IVertices and then IEdges
+     */
+    DSGraph(const DSGraph& DSG);
+
     /** Destructor, deleting ptr to G */
     ~DSGraph(); 
 
@@ -43,7 +48,7 @@ public:
      * @returns std::pair of edge iterators, first pointing to beginning of
      *     edge array, second pointing past the end, @see BGL quick tour
      */
-    std::pair<BEdge_it, BEdge_it> edges();
+    std::pair<BEdge_it, BEdge_it> edges() const;
 
     /**
      * Add vertex to graph and upd id maps
