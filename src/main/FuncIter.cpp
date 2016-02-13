@@ -15,7 +15,7 @@ FuncIter::FuncIter(int r, int n)
 
 
 bool FuncIter::max_reached() {
-    // iterate through fnumber, return true on seeing digit < radix - 1
+    // iterate through fnumber, return false on seeing digit < radix - 1
     for(std::vector<int>::iterator it = this->fnumber.begin();
             it != this->fnumber.end(); ++it) {
         if(*it < this->radix - 1) { return false; }
