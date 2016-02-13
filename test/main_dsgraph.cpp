@@ -113,6 +113,39 @@ TEST(DSGraph, graphConstruction) {
     ASSERT_TRUE(dsg_eit.first == dsg_eit.second) << "too many edges in actual";
 }
 
+TEST(DSGraph, copyConstructor) {
+    typedef std::set<IVertex> setI;
+
+    // g1.text
+    DSGraph dsg1 = Parser().parse_graph_int("graphs/g1.txt");
+    DSGraph dsg1_c = dsg1;
+    setI vs1{ 0, 1, 2, 3, 4, 5 };
+    // edges are added in order given in g1.txt
+    std::list<IEdge> es1{ IEdge(0, 4), IEdge(1, 3), IEdge(2, 3), IEdge(1, 5),
+            IEdge(3, 5) };  
+
+    EXPECT_EQ(vs1, dsg1_c.get_set_IVertices());
+    graphComp::compare_edges(dsg1_c, es1);
+
+    // just_a_vertex.txt
+    DSGraph dsg2 = Parser().parse_graph_int("graphs/just_a_vertex.txt");
+    DSGraph dsg2_c = dsg2;
+    setI vs2{ 0 };
+    std::list<IEdge> es2;
+
+    EXPECT_EQ(vs2, dsg2_c.get_set_IVertices());
+    graphComp::compare_edges(dsg2_c, es2);
+
+    // empty.txt
+    DSGraph dsg3 = Parser().parse_graph_int("graphs/empty.txt");
+    DSGraph dsg3_c = dsg3;
+    setI vs3;
+    std::list<IEdge> es3;
+
+    EXPECT_EQ(vs3, dsg3_c.get_set_IVertices());
+    graphComp::compare_edges(dsg3_c, es3);
+}
+
 TEST(DSGraph, getAdjVertices) {
     // g1.txt
     Parser p1;
