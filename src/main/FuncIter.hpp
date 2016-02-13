@@ -1,5 +1,5 @@
 #ifndef FUNCITER_H
-#define FUNCTIER_H
+#define FUNCITER_H
 
 #include <vector>
 
