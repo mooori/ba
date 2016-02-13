@@ -6,7 +6,6 @@ namespace {
 
 TEST(FuncIter, throws) {
     EXPECT_THROW(FuncIter(0, 1), std::runtime_error); 
-    EXPECT_THROW(FuncIter(666, 0), std::runtime_error);
     EXPECT_THROW(FuncIter(0, 0), std::runtime_error);
 }
 
@@ -86,26 +85,34 @@ TEST(FuncIter, FuncIter) {
     f3.increment();
     EXPECT_EQ(true, f3.max_reached());
     EXPECT_THROW(f3.increment(), std::runtime_error);
-
-    FuncIter f4(4, 1);
-    f4.increment();
-    EXPECT_EQ(1, f4.get_digit_val(0));
-    EXPECT_EQ(false, f4.max_reached());
-    f4.increment();
-    EXPECT_EQ(2, f4.get_digit_val(0));
-    EXPECT_EQ(false, f4.max_reached());
-    f4.increment();
-    EXPECT_EQ(3, f4.get_digit_val(0));
-    EXPECT_EQ(true, f4.max_reached());
-    EXPECT_THROW(f4.increment(), std::runtime_error);
 }
 
-TEST(FuncIter, singleComponent) {
-    // when only one component C, C must hit all colors
-    // so init val which assigns all colors to C equals max fnumber
+TEST(FuncIter, edgeCases) {
+    // when radix = 1, there are no comps, only backland
+    // so backland must handle all F colors
+    // max reached at init, no increment() possible
     FuncIter f(1, 666);
     for(int i = 0; i < 666; ++i) { EXPECT_EQ(0, f.get_digit_val(i)); }
     EXPECT_EQ(true, f.max_reached());
+    EXPECT_THROW(f.increment(), std::runtime_error);
+
+    // when n = 1, there's just one F color
+    FuncIter f2(4, 1);
+    f2.increment();
+    EXPECT_EQ(1, f2.get_digit_val(0));
+    EXPECT_EQ(false, f2.max_reached());
+    f2.increment();
+    EXPECT_EQ(2, f2.get_digit_val(0));
+    EXPECT_EQ(false, f2.max_reached());
+    f2.increment();
+    EXPECT_EQ(3, f2.get_digit_val(0));
+    EXPECT_EQ(true, f2.max_reached());
+    EXPECT_THROW(f2.increment(), std::runtime_error);
+
+    // when n = 0, there are no F colors
+    // must be possible to init though
+    FuncIter f3(7, 0);
+    EXPECT_EQ(true, f3.max_reached());
     EXPECT_THROW(f.increment(), std::runtime_error);
 }
 
