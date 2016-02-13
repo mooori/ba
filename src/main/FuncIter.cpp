@@ -8,7 +8,7 @@ FuncIter::FuncIter(int r, int n)
         , ndigs(n)
         , fnumber(std::vector<int>(ndigs, 0))
         {
-            if(r <= 0 || n <= 0) { 
+            if(r <= 0 || n < 0) { 
                 throw std::runtime_error("FuncIter: invalid init values");
             }
         }

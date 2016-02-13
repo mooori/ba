@@ -30,7 +30,7 @@ public:
      * Constructor, init function number at zero value.
      * @param radix number components + 1 for backland
      * @param ndigs number of digits for the function number (number colors)
-     * @throws std::runtime_error if either r or n <= 0
+     * @throws std::runtime_error if r <= 0 (there's at least Backland) or n < 0
      */
     FuncIter(int r, int n);
 
