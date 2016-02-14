@@ -3,6 +3,7 @@
 
 #include <list>
 #include <set>
+#include <string>
 
 #include "../main/DSGraph.hpp"
 #include "../main/FuncIter.hpp"
@@ -23,6 +24,12 @@ namespace helpers {
      * @param ndigs size of FuncIter's number
      */
     void print(const FuncIter& f, const unsigned int ndigs);
+
+    /** Print set of IVertices */
+    void print(const std::string name, const std::set<IVertex> s);
+
+    /** Print list of sets of IVertices */
+    void print(const std::string name, const std::list< std::set<IVertex> > l); 
 
 }    // namespace
 

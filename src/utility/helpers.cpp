@@ -43,3 +43,24 @@ void helpers::print(const FuncIter& f, const unsigned int ndigs) {
     std::cout << "\n";
     return;
 }
+
+void helpers::print(const std::string name, const std::set<IVertex> s) {
+    std::cout << name << "= { ";
+    for(std::set<IVertex>::const_iterator it = s.begin(); it != s.end(); ) {
+        std::cout << *it;
+        if(++it != s.end()) { std::cout << ", "; }
+    }
+    std::cout << " }\n";
+    return;
+}
+
+void helpers::print(const std::string name,
+        const std::list< std::set<IVertex> > l) {
+    std::cout << name << " = {\n";
+    int i = 0;
+    for(std::list< std::set<IVertex> >::const_iterator it = l.begin();
+            it != l.end(); ++it) {
+        helpers::print(name + "[" + std::to_string(i++) + "]", *it);
+    }
+    std::cout << "}\n";
+}
