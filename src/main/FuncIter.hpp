@@ -37,7 +37,7 @@ public:
     /**
      * @returns true if fnumber is at max value, given radix and ndigs
      */
-    bool max_reached();
+    bool max_reached() const;
 
     /**
      * Increment fnumber by one. Call max_reached first, as increment throws
@@ -49,7 +49,7 @@ public:
     /**
      * Get digit value at position idx (wrapper for fnumber[idx])
      */
-    int get_digit_val(int idx);
+    int get_digit_val(const int idx) const;
 
 
 private:

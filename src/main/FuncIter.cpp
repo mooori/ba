@@ -14,9 +14,9 @@ FuncIter::FuncIter(int r, int n)
         }
 
 
-bool FuncIter::max_reached() {
+bool FuncIter::max_reached() const {
     // iterate through fnumber, return false on seeing digit < radix - 1
-    for(std::vector<int>::iterator it = this->fnumber.begin();
+    for(std::vector<int>::const_iterator it = this->fnumber.begin();
             it != this->fnumber.end(); ++it) {
         if(*it < this->radix - 1) { return false; }
     }
@@ -40,6 +40,6 @@ void FuncIter::increment() {
     throw std::runtime_error("cannot increment max function number");
 }
 
-int FuncIter::get_digit_val(int idx) {
+int FuncIter::get_digit_val(int idx) const {
     return this->fnumber[idx];
 }
