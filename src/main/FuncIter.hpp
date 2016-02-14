@@ -32,7 +32,7 @@ public:
      * @param ndigs number of digits for the function number (number colors)
      * @throws std::runtime_error if r <= 0 (there's at least Backland) or n < 0
      */
-    FuncIter(int r, int n);
+    FuncIter(unsigned int r, unsigned int n);
 
     /**
      * @returns true if fnumber is at max value, given radix and ndigs
@@ -49,18 +49,18 @@ public:
     /**
      * Get digit value at position idx (wrapper for fnumber[idx])
      */
-    int get_digit_val(const int idx) const;
+    unsigned int get_digit_val(const unsigned int idx) const;
 
 
 private:
     /** function number's radix */
-    int radix;
+    unsigned int radix;
 
     /** number of digits for the function number */
-    int ndigs;
+    unsigned int ndigs;
 
     /** function number */
-    std::vector<int> fnumber;
+    std::vector<unsigned int> fnumber;
 };
 
 #endif
