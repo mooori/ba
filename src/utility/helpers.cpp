@@ -5,6 +5,20 @@
 #include "../main/DSGraph.hpp"
 #include "../main/FuncIter.hpp"
 #include "../types/dstypes.hpp"
+#include "../utility/setops.hpp"
+
+bool helpers::is_ds(const DSGraph& dsg, const std::set<IVertex>& d) {
+    // for each v in d, delete v and N_1(v) from vg = V(dsg)
+    // then check if vg.empty()
+    std::set<IVertex> vg = dsg.get_set_IVertices();
+    for(std::set<IVertex>::const_iterator d_it = d.begin(); d_it != d.end();
+            ++d_it) {
+        std::set<IVertex> n1v = dsg.get_adj_IVertices(*d_it);
+        vg = setops::setminus_new(vg, n1v);
+        vg.erase(*d_it);
+    }
+    return vg.empty();
+}
 
 void helpers::print_vs(const DSGraph& dsg) {
     std::set<IVertex> vs = dsg.get_set_IVertices();

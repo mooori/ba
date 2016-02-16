@@ -10,6 +10,12 @@
 
 namespace helpers {
 
+    /*
+     * Verify if set of IVertices d is dom set for graph dsg
+     * @throws @see DSGraph::get_adj_IVertices
+     */
+    bool is_ds(const DSGraph& dsg, const std::set<IVertex>& d);
+
     /** Print DSGraph's IVertices */
     void print_vs(const DSGraph& dsg);
 
