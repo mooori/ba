@@ -57,19 +57,21 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     std::list<DSGraph*>* comps1 = WComps(DSG, rgds::trans_I2B(DSG, W1)).get();
     rgds::result_t res1 = rgds::solve(comps1, setops::union_new(H, N1v),
             setops::filter_containing_v_new(Fs, v), k - 1, VG_minus_v, D);
+    WComps::delete_comps_ptrs(comps1);
     if(res1.second) {
         std::pair<std::set<IVertex>::iterator, bool> ins = res1.first.insert(v);
         if(!ins.second) { throw std::runtime_error("failed to insert in D"); }
         return res1;
     }
-    WComps::delete_comps_ptrs(comps1);
 
     // try v \notin GDS
     //std::cout << "\ntry v = " << v << " NOT in D\n";
     std::set<IVertex> W2 = setops::setminus_new(VG_minus_v, H);
     std::list<DSGraph*>* comps2 = WComps(DSG, rgds::trans_I2B(DSG, W2)).get();
     if(!N1v.empty() && H.find(v) == H.end()) { Fs.push_back(N1v); }
-    return rgds::solve(comps2, H, Fs, k, VG_minus_v, D);
+    rgds::result_t res2 = rgds::solve(comps2, H, Fs, k, VG_minus_v, D);
+    WComps::delete_comps_ptrs(comps2);
+    return res2;
 }
 
 rgds::result_t rgds::solve(std::list<DSGraph*>* comps, std::set<IVertex> H,
