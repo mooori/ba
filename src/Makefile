@@ -13,7 +13,8 @@ include $(patsubst %,%/sdir.mk,$(SDIRS))
 OBJ := $(patsubst %.cpp,%.o,$(filter %.cpp,$(SRC)))
 DEP := $(patsubst %.cpp,%.d,$(filter %.cpp,$(SRC)))
 
-# path to BA-shortest-paths (relative to this makefile)
+# SPD related variables
+# filter spd's Main.o (else err 'mutliple declarations of main()')
 SPD_PATH := ../../BA-shortest-paths-decomposition
 SPD_EXCL := $(SPD_PATH)/build/Main.o
 SPD_OBJ_ALL := $(wildcard $(SPD_PATH)/build/*.o)
