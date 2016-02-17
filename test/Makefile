@@ -1,6 +1,9 @@
 # For gtest-part: Based on Makefile provided by googletest
 # To make own tests: Based on http://aegis.sourceforge.net/auug97.pdf
 
+# =============================================================================
+# Gtest
+# =============================================================================
 # Points to the root of Google Test, relative to where this file is.
 GTEST_DIR = ../lib/googletest_1.7.0
 
@@ -44,7 +47,9 @@ gtest.a : gtest-all.o
 gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $(GTEST_DIR)/make/$@ $(addprefix $(GTEST_DIR)/make/,$^)
 
+# =============================================================================
 # Tests
+# =============================================================================
 SRC := $(wildcard *.cpp)
 OBJ := $(SRC:.cpp=.o)
 # LINK: must exclude ../src/main.o
@@ -52,8 +57,14 @@ LINK := $(subst ../src/main/main.o,,$(wildcard ../src/main/*.o)) \
 		$(wildcard ../src/utility/*.o)
 LIBS := ../boost_1_60_0
 
+# Get object files required for spd
+SPD_PATH := ../../BA-shortest-paths-decomposition
+SPD_EXCL := $(SPD_PATH)/build/Main.o
+SPD_OBJ_ALL := $(wildcard $(SPD_PATH)/build/*.o)
+SPD_OBJ_LINK := $(filter-out $(SPD_EXCL),$(SPD_OBJ_ALL))
+
 test: $(OBJ) $(GTEST_DIR)/make/gtest.a $(LINK)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ $(SPD_OBJ_LINK) -o $@
 
 include $(OBJ:.o=.d)
 
