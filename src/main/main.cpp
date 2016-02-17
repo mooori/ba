@@ -9,9 +9,11 @@
 #include "Distance.hpp"
 #include "FuncIter.hpp"
 #include "MinHS.hpp"
+#include "rgds.hpp"
 #include "SubsetGen.hpp"
 #include "WComps.hpp"
 #include "../types/dstypes.hpp"
+#include "../utility/helpers.hpp"
 #include "../utility/Parser.hpp"
 #include "../utility/setops.hpp"
 
@@ -25,13 +27,9 @@ int main() {
 
     FuncIter f(3, 4);
     f.increment();
-    std::cout << "fnumber[0] = " << f.get_digit_val(0) << std::endl;
-    std::cout << "fnumber[1] = " << f.get_digit_val(1) << std::endl;
     f.increment();
     f.increment();
     f.increment();
-    //std::cout << "fnumber[0] = " << f.get_digit_val(0) << std::endl;
-    //std::cout << "fnumber[1] = " << f.get_digit_val(1) << std::endl;
 
     FuncIter f2(6, 3);
     //FuncIter f3(3, 0);
@@ -51,10 +49,8 @@ int main() {
 
     DSGraph dsg1 = Parser().parse_graph_int("../test/graphs/g1.txt");
     std::set<BVertex> W1;
-    std::cout << "about to build W\n";
     W1.insert(dsg1.get_BVertex(1)); W1.insert(dsg1.get_BVertex(4));
     W1.insert(dsg1.get_BVertex(5));
-    std::cout << "built up W\n";
     WComps wc1(dsg1, W1);
     std::list<DSGraph*>* comps1 = wc1.get();
     WComps::delete_comps_ptrs(comps1);
@@ -68,7 +64,54 @@ int main() {
     std::list<DSGraph*>* comps2 = WC2.get();
     WComps::delete_comps_ptrs(comps2);
     
+    typedef std::set<IVertex> setI;
+    DSGraph dsg3 = Parser().parse_graph_int("../test/graphs/g_distance.txt");
+    rgds::result_t res3 = rgds::rgds(dsg3, setI(), std::list<setI>(), 4,
+            setI());
+    helpers::print("g_distance: D ", res3.first);
 
-    std::cout << "falou\n";
+    /**
+    DSGraph dsg4 = Parser().parse_graph_int("../test/graphs/g2.txt");
+    rgds::result_t res4 = rgds::rgds(dsg4, setI(), std::list<setI>(), 2,
+            setI());
+    helpers::print("g2.txt D ", res4.first);
+    */
+
+    /**
+    DSGraph dsg5 = Parser().parse_graph_int("../test/graphs/g3.txt");
+    rgds::result_t res5 = rgds::rgds(dsg5, setI(), std::list<setI>(), 3,
+            setI());
+    helpers::print("g3.txt D ", res5.first);
+
+    DSGraph dsg6 = Parser().parse_graph_int("../test/graphs/g4.txt");
+    rgds::result_t res6 = rgds::rgds(dsg6, setI(), std::list<setI>(), 3,
+            setI());
+    helpers::print("g4.txt D ", res6.first);
+
+    DSGraph dsg7 = Parser().parse_graph_int("../test/graphs/g5.txt");
+    rgds::result_t res7 = rgds::rgds(dsg7, setI(), std::list<setI>(), 3,
+            setI());
+    helpers::print("g5.txt D ", res7.first);
+
+    DSGraph dsg8 = Parser().parse_graph_int("../test/graphs/g6.txt");
+    rgds::result_t res8 = rgds::rgds(dsg8, setI(), std::list<setI>(), 3,
+            setI());
+    helpers::print("g6.txt D ", res8.first);
+    */
+
+    /**
+    DSGraph dsg9 = Parser().parse_graph_int("../test/graphs/empty.txt");
+    rgds::result_t res9 = rgds::rgds(dsg9, setI(), std::list<setI>(), 0,
+            setI());
+    helpers::print("empty.txtt D ", res9.first);
+    */
+
+    DSGraph dsg10 = Parser().parse_graph_int("../test/graphs/g8.txt");
+    rgds::result_t res10 = rgds::rgds(dsg10, setI(), std::list<setI>(), 3,
+            setI());
+    std::cout << "res10 bool = " << res10.second << "\n";
+    helpers::print("g8.txt D ", res10.first);
+
+    std::cout << "exiting\n";
     return 0;
 }
