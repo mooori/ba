@@ -1,2 +1,2 @@
-// graph of just a single vertex
+% graph of just a single vertex
 0
