@@ -1,10 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <set>
 #include <sstream>
 #include <string>
 #include <stdexcept>
 #include <utility>
-#include <boost/lexical_cast.hpp>
 
 #include "Parser.hpp"
 #include "../types/dstypes.hpp"
@@ -14,42 +14,30 @@ Parser::Parser() { }
 DSGraph Parser::parse_graph_int(const char* fpn) {
     std::ifstream inp(fpn);
     std::string line;
-    std::list<IVertex> verts;
+    std::set<IVertex> verts;
     std::list<IEdge> edges;
 
-    // read and store vertices till blank line met
-    while(getline(inp, line) && !line.empty()) {
-        if(line.substr(0, 2) == "//") { continue; } // skip comments
-        int vname;
-        try { 
-            vname = boost::lexical_cast<int>(line);
-        }
-        catch(const boost::bad_lexical_cast& e) {
-            throw std::runtime_error("bad input (vertex): \"" + line + "\"");
-        }
-        verts.push_back(vname);
-    }
-
-    // read and store edges
+    // iterate over data lines to build up set of vertices and list of edges
     while(getline(inp, line)) {
-        if(line.substr(0, 2) == "//") { continue; }
+        if(line.substr(0, 1) == "%"  || line.empty()) { continue; }
         std::istringstream iss(line);
-        int u, v;
-        if (!(iss >> u >> v)) {
-            throw std::runtime_error("bad input (edge): \"" + line + "\"");
+        unsigned int u, v;
+        if(!(iss >> u)) {
+            throw std::runtime_error("bad input: " + line);
+        } else if(!(iss >> v)) {
+            // could read u but not v, so it's just a vertex
+            verts.insert(u);
+        } else {
+            verts.insert(u); verts.insert(v);
+            edges.push_back(IEdge(u, v));
         }
-        edges.push_back(IEdge(u,v));
-    }
-
-    // test for bad input
-    // graph without vertices may not have edges
-    if (verts.empty() && !edges.empty()) {
-        throw std::runtime_error("graph without vertices may not have edges");
     }
 
     // construct DSGraph
     DSGraph dsg;
-    dsg.add_IVertices(verts);
+    // remove var when DSG constant
+    std::list<IVertex> vl(verts.begin(), verts.end());
+    dsg.add_IVertices(vl);
     dsg.add_IEdges(edges);
 
     return dsg;
