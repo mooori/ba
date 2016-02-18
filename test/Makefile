@@ -55,7 +55,6 @@ OBJ := $(SRC:.cpp=.o)
 # LINK: must exclude ../src/main.o
 LINK := $(subst ../src/main/main.o,,$(wildcard ../src/main/*.o)) \
 		$(wildcard ../src/utility/*.o)
-LIBS := ../boost_1_60_0
 
 # Get object files required for spd
 SPD_PATH := ../../BA-shortest-paths-decomposition
