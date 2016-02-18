@@ -21,7 +21,7 @@ rgds::result_t rgds::no_solution_res() {
 
 rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
         std::list< std::set<IVertex> > Fs, unsigned int k,
-        std::set<IVertex> D) {
+        std::set<IVertex> D, const std::vector<IVertex>& spd_ord) {
     //std::cout << "\n========================================================\n";
     //std::cout << "rgds called for DSG:\n";
     //helpers::print(DSG);
@@ -44,7 +44,7 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
         return rgds::result_t(setops::union_new(D, VG), true);
     }
 
-    IVertex v = DSG.get_IVertex(*(DSG.vertices().first));
+    IVertex v = rgds::choose_v_spd(DSG, spd_ord);
     std::set<IVertex> N1v = DSG.get_adj_IVertices(v);
     DSG.remove_IVertex(v);
     std::set<IVertex> VG_minus_v = DSG.get_set_IVertices();
@@ -56,7 +56,8 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     std::set<IVertex> W1 = setops::setminus_new(VG_minus_v, remove1);
     std::list<DSGraph*>* comps1 = WComps(DSG, rgds::trans_I2B(DSG, W1)).get();
     rgds::result_t res1 = rgds::solve(comps1, setops::union_new(H, N1v),
-            setops::filter_containing_v_new(Fs, v), k - 1, VG_minus_v, D);
+            setops::filter_containing_v_new(Fs, v), k - 1, VG_minus_v, D,
+            spd_ord);
     WComps::delete_comps_ptrs(comps1);
     if(res1.second) {
         std::pair<std::set<IVertex>::iterator, bool> ins = res1.first.insert(v);
@@ -69,14 +70,26 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     std::set<IVertex> W2 = setops::setminus_new(VG_minus_v, H);
     std::list<DSGraph*>* comps2 = WComps(DSG, rgds::trans_I2B(DSG, W2)).get();
     if(!N1v.empty() && H.find(v) == H.end()) { Fs.push_back(N1v); }
-    rgds::result_t res2 = rgds::solve(comps2, H, Fs, k, VG_minus_v, D);
+    rgds::result_t res2 = rgds::solve(comps2, H, Fs, k, VG_minus_v, D, spd_ord);
     WComps::delete_comps_ptrs(comps2);
     return res2;
 }
 
+IVertex rgds::choose_v_spd(const DSGraph& dsg,
+        const std::vector<IVertex>& ord) {
+    // iterate through ord, return first v with v \in V(dsg)
+    std::set<IVertex> vs = dsg.get_set_IVertices();
+    for(std::vector<IVertex>::const_iterator ord_it = ord.begin();
+            ord_it != ord.end(); ++ord_it) {
+        if(vs.find(*ord_it) != vs.end()) { return *ord_it; }
+    }
+    throw std::runtime_error("none of DSG's vertices in spd_order");
+}
+
 rgds::result_t rgds::solve(std::list<DSGraph*>* comps, std::set<IVertex> H,
         std::list< std::set<IVertex> > Fs, unsigned int k,
-        std::set<IVertex> VG, std::set<IVertex> D) {
+        std::set<IVertex> VG, std::set<IVertex> D,
+        const std::vector<IVertex>& spd_ord) {
     //std::cout << "\n==================================================\n";
     //std::cout << "solve called for\n";
     //std::cout << "comp vec of size = " << comps->size() << "\n";
@@ -102,7 +115,7 @@ rgds::result_t rgds::solve(std::list<DSGraph*>* comps, std::set<IVertex> H,
     } while(!f.max_reached());
     */
     while(true) {
-        rgds::result_t res = rgds::try_f(f, comps, B, H, Fs, k, D);
+        rgds::result_t res = rgds::try_f(f, comps, B, H, Fs, k, D, spd_ord);
         if(res.second) { return res; }
         if(f.max_reached()) { break; }
         f.increment();
@@ -147,9 +160,9 @@ std::set<IVertex> rgds::get_backland(std::set<IVertex>& VG,
 
 rgds::result_t rgds::get_min_gds(DSGraph DSG, std::set<IVertex> H,
         std::list< std::set<IVertex> > Fs, unsigned int max_k,
-        std::set<IVertex> D) {
+        std::set<IVertex> D, const std::vector<IVertex>& spd_ord) {
     for(unsigned int k = 0; k <= max_k; ++k) {
-        rgds::result_t res = rgds::rgds(DSG, H, Fs, k, D);
+        rgds::result_t res = rgds::rgds(DSG, H, Fs, k, D, spd_ord);
         if(res.second) { return res; }
     }
     return rgds::result_t(std::set<IVertex>(), false);
@@ -168,7 +181,7 @@ std::set<IVertex>
 rgds::result_t rgds::try_f(FuncIter& f, std::list<DSGraph*>* comps,
         std::set<IVertex> B, std::set<IVertex> H,
         std::list< std::set<IVertex> > Fs, unsigned int k,
-        std::set<IVertex> D) {
+        std::set<IVertex> D, const std::vector<IVertex>& spd_ord) {
     rgds::result_t res_no_solution(std::set<IVertex>(), false);
     
     // vecs to hold comps and per comp: Fs, D, result of rgds
@@ -208,7 +221,7 @@ rgds::result_t rgds::try_f(FuncIter& f, std::list<DSGraph*>* comps,
             if(!was_empty && f_it->empty()) { return res_no_solution; }
         }
         std::set<IVertex> H_C = setops::inters_new(H, VC);
-        rgds::result_t res_C = rgds::get_min_gds(*C, H_C, Fs_C, k, D);
+        rgds::result_t res_C = rgds::get_min_gds(*C, H_C, Fs_C, k, D, spd_ord);
         if(!res_C.second) { return res_no_solution; }
         comps_res[i] = res_C;
     }

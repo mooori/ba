@@ -10,6 +10,7 @@
 #include "FuncIter.hpp"
 #include "MinHS.hpp"
 #include "rgds.hpp"
+#include "spd.hpp"
 #include "SubsetGen.hpp"
 #include "WComps.hpp"
 #include "../types/dstypes.hpp"
@@ -67,7 +68,7 @@ int main() {
     typedef std::set<IVertex> setI;
     DSGraph dsg3 = Parser().parse_graph_int("../test/graphs/g_distance.txt");
     rgds::result_t res3 = rgds::rgds(dsg3, setI(), std::list<setI>(), 4,
-            setI());
+            setI(), spd::build_order(dsg3));
     helpers::print("g_distance: D ", res3.first);
 
     /**
@@ -108,7 +109,7 @@ int main() {
 
     DSGraph dsg10 = Parser().parse_graph_int("../test/graphs/g8.txt");
     rgds::result_t res10 = rgds::rgds(dsg10, setI(), std::list<setI>(), 3,
-            setI());
+            setI(), spd::build_order(dsg10));
     std::cout << "res10 bool = " << res10.second << "\n";
     helpers::print("g8.txt D ", res10.first);
 

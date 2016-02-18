@@ -4,6 +4,7 @@
 #include <list>
 #include <set>
 #include <utility>
+#include <vector>
 
 #include "DSGraph.hpp"
 #include "FuncIter.hpp"
@@ -20,11 +21,17 @@ namespace rgds {
 
     result_t rgds(DSGraph DSG, std::set<IVertex> H,
             std::list< std::set<IVertex> > Fs, unsigned int k,
-            std::set<IVertex> D);
+            std::set<IVertex> D, const std::vector<IVertex>& spd_ord);
+
+    /**
+     * Choose RGDS's v to remove from graph as dsg's smallest vertex in ord
+     */
+    IVertex choose_v_spd(const DSGraph& dsg, const std::vector<IVertex>& ord);
 
     result_t solve(std::list<DSGraph*>* comps, std::set<IVertex> H,
             std::list< std::set<IVertex> > Fs, unsigned int k,
-            std::set<IVertex> VG, std::set<IVertex> D);
+            std::set<IVertex> VG, std::set<IVertex> D,
+            const std::vector<IVertex>& spd_ord);
 
     /** return true if RGDS's termination cond related to Distance is met */
     bool diams_exceeding(std::list<DSGraph*>* comps, unsigned int k);
@@ -40,7 +47,7 @@ namespace rgds {
     /** Find min GDS, return ({}, false) if |GDS| > k */
     result_t get_min_gds(DSGraph DSG, std::set<IVertex> H,
             std::list< std::set<IVertex> > Fs, unsigned int max_k,
-            std::set<IVertex> D);
+            std::set<IVertex> D, const std::vector<IVertex>& spd_ord);
 
     /**
      * Big_union over all sets in vector of rgds::result_t's
@@ -53,7 +60,7 @@ namespace rgds {
     result_t try_f(FuncIter& f, std::list<DSGraph*>* comps,
             std::set<IVertex> B, std::set<IVertex> H,
             std::list< std::set<IVertex> > Fs, unsigned int k,
-            std::set<IVertex> D);
+            std::set<IVertex> D, const std::vector<IVertex>& spd_ord);
 
     /** translate list of IColors to BColors */
     std::set<BVertex> trans_I2B(const DSGraph& DSG,
