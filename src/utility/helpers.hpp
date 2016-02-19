@@ -7,6 +7,7 @@
 
 #include "../main/DSGraph.hpp"
 #include "../main/FuncIter.hpp"
+#include "../types/dstypes.hpp"
 
 namespace helpers {
 
@@ -15,6 +16,8 @@ namespace helpers {
      * @throws @see DSGraph::get_adj_IVertices
      */
     bool is_ds(const DSGraph& dsg, const std::set<IVertex>& d);
+
+    std::set<BVertex> i2b(const DSGraph& dsg, const std::set<IVertex>& si);
 
     /** Print DSGraph's IVertices */
     void print_vs(const DSGraph& dsg);

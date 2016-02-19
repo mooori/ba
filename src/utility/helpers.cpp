@@ -20,6 +20,15 @@ bool helpers::is_ds(const DSGraph& dsg, const std::set<IVertex>& d) {
     return vg.empty();
 }
 
+std::set<BVertex> helpers::i2b(const DSGraph& dsg, const std::set<IVertex>& si) {
+    std::set<BVertex> sb;
+    for(std::set<IVertex>::const_iterator it = si.begin(); it != si.end();
+            ++it) {
+        sb.insert(dsg.get_BVertex(*it));
+    }
+    return sb;
+}
+
 void helpers::print_vs(const DSGraph& dsg) {
     std::set<IVertex> vs = dsg.get_set_IVertices();
     std::cout << "IVertices = { ";
