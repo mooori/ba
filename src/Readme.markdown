@@ -13,7 +13,14 @@ Move to `src/`, then:
 1. Build `BA-shortest-paths-decomposition` with `make spd`
 2. Build this project with `make`
 
-Run it with `./dsSolver`.
+Graph parser accepts format used by Konect.
+
+Call RGDS on a graph and provide `k`:
+    `./dsSolver ./path/to/graph rgds k`
+
+Calculate a graphs domination number and a minimum dominating set using brute
+force (for `k \in [0, |V(G)|]`, try all size k subset of `V(G)`):
+    `./dsSolver ./path/to/graph bf`
 
 # Tests
 See `test/Readme.markdown`.
