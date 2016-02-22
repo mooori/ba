@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-#include <iostream>
 
 #include "Distance.hpp"
 #include "DSGraph.hpp"
@@ -12,7 +11,6 @@
 #include "WComps.hpp"
 #include "rgds.hpp"
 #include "../types/distance_info.hpp"
-#include "../utility/helpers.hpp"
 #include "../utility/setops.hpp"
 
 rgds::result_t rgds::no_solution_res() {
@@ -22,13 +20,6 @@ rgds::result_t rgds::no_solution_res() {
 rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
         std::list< std::set<IVertex> > Fs, unsigned int k,
         std::set<IVertex> D, const std::vector<IVertex>& spd_ord) {
-    //std::cout << "\n========================================================\n";
-    //std::cout << "rgds called for DSG:\n";
-    //helpers::print(DSG);
-    //helpers::print("H", H);
-    //helpers::print("Fs", Fs);
-    //std::cout << "k = " << k << "\n";
-    //helpers::print("D", D);
     std::set<IVertex> VG = DSG.get_set_IVertices();
 
     if(k == 0) { 
@@ -40,7 +31,6 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     }
 
     if(VG.size() == 1) {
-        //std::cout << "should add v = " << *(VG.begin()) << "\n";
         return rgds::result_t(setops::union_new(D, VG), true);
     }
 
@@ -50,7 +40,6 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     std::set<IVertex> VG_minus_v = DSG.get_set_IVertices();
 
     // try v \in GDS
-    //std::cout << "\ntry v = " << v << " in D\n";
     std::set<IVertex> remove1 = setops::union_new(H, N1v);
             // remove var when setops const
     std::set<IVertex> W1 = setops::setminus_new(VG_minus_v, remove1);
@@ -66,7 +55,6 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     }
 
     // try v \notin GDS
-    //std::cout << "\ntry v = " << v << " NOT in D\n";
     std::set<IVertex> W2 = setops::setminus_new(VG_minus_v, H);
     std::list<DSGraph*>* comps2 = WComps(DSG, rgds::trans_I2B(DSG, W2)).get();
     if(!N1v.empty() && H.find(v) == H.end()) { Fs.push_back(N1v); }
@@ -90,30 +78,14 @@ rgds::result_t rgds::solve(std::list<DSGraph*>* comps, std::set<IVertex> H,
         std::list< std::set<IVertex> > Fs, unsigned int k,
         std::set<IVertex> VG, std::set<IVertex> D,
         const std::vector<IVertex>& spd_ord) {
-    //std::cout << "\n==================================================\n";
-    //std::cout << "solve called for\n";
-    //std::cout << "comp vec of size = " << comps->size() << "\n";
-    //helpers::print("H", H);
-    //helpers::print("Fs", Fs);
-    //std::cout << "k = " << k << "\n";
-    //helpers::print("VG", VG);
-    //helpers::print("D", D);
 
     // check termination conditions
     if(comps->size() > k) { return rgds::no_solution_res(); }
     if(rgds::diams_exceeding(comps, k)) { return rgds::no_solution_res(); }
 
     std::set<IVertex> B = rgds::get_backland(VG, comps);
-    //helpers::print("B", B);
 
     FuncIter f(comps->size() + 1, Fs.size());
-    /**
-    do {
-        rgds::result_t res = rgds::try_f(f, comps, B, H, Fs, k, D);
-        if(res.second) { return res; }
-        f.increment();
-    } while(!f.max_reached());
-    */
     while(true) {
         rgds::result_t res = rgds::try_f(f, comps, B, H, Fs, k, D, spd_ord);
         if(res.second) { return res; }
