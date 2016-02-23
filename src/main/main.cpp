@@ -15,7 +15,7 @@
 int main(int argc, char* argv[]) {
 
     const char* help =
-            "./dsSolver graph rgds k\n./dsSolver graph bf\n";
+            "./dsSolver graph rgds k ncores\n./dsSolver graph bf\n";
 
     if(argc < 2) { std::cout << help; return 0; }
     
@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
     if(method != "bf" && method != "rgds") { std::cout << help; return 0; }
     if(method == "bf" && argc != 3) { std::cout << help; return 0; }
-    if(method == "rgds" && argc != 4) { std::cout << help; return 0; }
+    if(method == "rgds" && argc != 5) { std::cout << help; return 0; }
     
 
     typedef std::set<IVertex> setI;
@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
     
     if(method == "rgds") {
         unsigned int k = std::atoi(argv[3]);
+        unsigned int ncores = std::atoi(argv[4]);
         std::time_t start = std::time(nullptr);
         if(k <= 0) { 
             std::cout << "implement typ check, then allow for k=0, too\n"; 
@@ -48,12 +49,10 @@ int main(int argc, char* argv[]) {
 
         std::cout << "Evaluating rgds...\n";
         rgds::result_t res = rgds::rgds(dsg, setI(), std::list<setI>(), k,
-                setI(), spd_ord);
+                setI(), spd_ord, ncores);
 
         if(res.second) {
             std::cout << "Found DS D of size " << res.first.size() << "\n";
-            std::cout << "Compuation time: "
-                    << std::time(nullptr) - start << " secs\n";
             helpers::print("D", res.first);
         } else {
             std::cout << "No DS found for k = " << k << "\n";
@@ -63,6 +62,9 @@ int main(int argc, char* argv[]) {
             std::cout << "Verifying RGDS's result...result correct? " <<
                     helpers::is_ds(dsg, res.first) << "\n";
         }
+
+        std::cout << "Compuation time: "
+                << std::time(nullptr) - start << " secs\n";
     }
 
     if(method == "bf") {
