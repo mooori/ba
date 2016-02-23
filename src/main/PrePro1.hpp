@@ -8,7 +8,10 @@
 #include "../types/dstypes.hpp"
 
 /**
- * @brief Apply rule 1 from Albers, Fellow & Niedermeier 2004
+ * @brief Apply rule 1 from Albers, Fellow & Niedermeier 2004.
+ *
+ * Init with DSGraph, then apply(). Pass on PP1.pre_D and PP1.pre_H to
+ * rgds(...) and PP2, if applied. Adjust k passed on to rgds() by |pre_D|.
  */
 class PrePro1 {
 public:
@@ -43,7 +46,7 @@ public:
     std::vector< std::set<BVertex> > get_n_is(const BVertex v) const;    
 
 private:
-    DSGraph dsg;
+    DSGraph& dsg;
 };
 
 #endif
