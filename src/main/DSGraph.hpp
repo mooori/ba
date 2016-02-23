@@ -31,6 +31,12 @@ public:
     /** Boost Graph */
     BGraph* G;
 
+    /** Delete possibly default created by compiler */
+    DSGraph& operator=(const DSGraph&) = delete;
+
+    /** Delete possibly default created by compiler */
+    DSGraph& operator=(DSGraph&&) = delete;
+
     /**
      * Get number of G's vertices
      */
