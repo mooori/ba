@@ -12,6 +12,9 @@
 
 namespace {
 
+/** To tell rgds::rgds(...) how many cores are available */
+const unsigned int ncores = 4;
+
 /** 
  * Execute rgds tests on a graph
  * @param gpath path to graph's text file
@@ -24,7 +27,7 @@ void test_rgds(const char* gpath, unsigned int dom_num) {
 
     // test D with |D| = dom_num is found
     rgds::result_t res1 = rgds::rgds(dsg, setI(), std::list<setI>(),
-            dom_num, setI(), spd_ord);
+            dom_num, setI(), spd_ord, ncores);
     EXPECT_EQ(true, res1.second) << gpath;
     EXPECT_TRUE(helpers::is_ds(dsg, res1.first));
 
@@ -32,7 +35,7 @@ void test_rgds(const char* gpath, unsigned int dom_num) {
     // however, if dom_num = 0, this is useless, so return
     if(dom_num == 0) { return; }
     rgds::result_t res2 = rgds::rgds(dsg, setI(), std::list<setI>(),
-            dom_num - 1, setI(), spd_ord);
+            dom_num - 1, setI(), spd_ord, ncores);
     EXPECT_EQ(false, res2.second) << gpath;
     EXPECT_EQ(setI(), res2.first) << gpath;
 
