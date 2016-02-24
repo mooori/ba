@@ -253,6 +253,11 @@ void rgds::work_comps(
         res.first[i] = res_C;
     }
     res.second = true;
+
+    // this function may be executed in thread, so try decr nthreads_active
+    std::unique_lock<std::mutex> lock{rgds::mutex};
+    if(rgds::nthreads_active > 0) { --rgds::nthreads_active; }
+    lock.unlock();
     return;
 }
 
@@ -322,13 +327,11 @@ std::pair<std::vector<rgds::result_t>, bool> rgds::concurrently_work_comps(
                 t_Fs[i], k, D, std::ref(spd_ord), ncores, std::ref(t_res[i]));
     }
 
-    // join threads, afterwards reduce nactive_threads
+    // join threads
+    // dont decrement nthreads_active; done in function executed by threads
     for(unsigned int i = 0; i < nstart; ++i) {
         threads[i].join();
     }
-    lock.lock();
-    rgds::nthreads_active -= nstart;
-    lock.unlock();
 
     // concatenate threads' results
     // if any thread returned false, return 'no_solution'
