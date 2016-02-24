@@ -26,6 +26,10 @@ TEST(PrePro1, apply) {
     EXPECT_EQ(setI(), pp11.pre_H);
     EXPECT_EQ(setI({ 0, 1, 2, 7 }), pp11.pre_D);
     EXPECT_EQ(setI(), pp11.no_effect);
+
+    // check graph
+    EXPECT_EQ(0, g11.num_vertices());
+    EXPECT_TRUE(g11.edges().first == g11.edges().second);
 }
 
 /** Test if union of nis cover entire neighbourhood */
