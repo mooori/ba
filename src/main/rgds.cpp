@@ -38,7 +38,7 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
         }
     }
 
-    if(VG.size() == 1) {
+    if(VG.size() <= 1) {
         return rgds::result_t(setops::union_new(D, VG), true);
     }
 
