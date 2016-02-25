@@ -1,6 +1,7 @@
 #ifndef PREPRO1_H
 #define PREPRO1_H
 
+#include <map>
 #include <set>
 #include <vector>
 
@@ -10,16 +11,14 @@
 /**
  * @brief Apply rule 1 from Albers, Fellow & Niedermeier 2004.
  *
- * Init with DSGraph, then apply(). Pass on PP1.pre_D and PP1.pre_H to
- * rgds(...) and PP2, if applied. Adjust k passed on to rgds() by |pre_D|.
+ * Init with DSGraph, then apply() to carry out rule 1, modifying dsg.
+ * Pass on PP1.pre_D and PP1.pre_H to rgds(...) and PP2, if applied. Adjust
+ * k passed on to rgds() by |pre_D|.
  */
 class PrePro1 {
 public:
-    /** Constructor initiating attributes */
+    /** Set attributes */
     PrePro1(DSGraph& dsg);
-
-    /** IVertices for which rule 1 had no effect */
-    std::set<IVertex> no_effect;
 
     /** IVertices to be added to D as result of rule 1 */
     std::set<IVertex> pre_D;
@@ -27,17 +26,8 @@ public:
     /** IVertices colored H as result of adding verts to pre_D */
     std::set<IVertex> pre_H;
 
-    /**
-     * Apply preprocessing rule 1 to each vertex v in dsg:
-     *     - if N3(v).empty()
-     *       - no_effect.insert(v)
-     *       - continue
-     *     - remove N3(v) from dsg and pre_H
-     *     - remove N2(v) from dsg and pre_H
-     *     - H.insert(N(v))
-     *     - dsg.remove(v) and pre_H.erase(v)
-     */
-    void apply();
+    /** Wrapper for calling init() and finish() successively */
+    void run();
 
     /**
      * Calculate N1, N2, N3 for BVertex v.
@@ -46,7 +36,29 @@ public:
     std::vector< std::set<BVertex> > get_n_is(const BVertex v) const;    
 
 private:
+    /** Graph to which apply preprocessing; will be modified */
     DSGraph& dsg;
+
+    /** Map IVertex to its n_is; avoid multiple computations of n_is */
+    std::map< IVertex, std::vector< std::set<BVertex> > > m;
+    
+    /**
+     * Iterate through vertices: add to pre_D and remove n2, n3
+     *     - if N3(v).empty()
+     *       - continue
+     *     - insert N(v) to pre_D
+     */
+    void init();
+
+    /**
+     * Clear graph: remove vertices in pre_D from dsg & pre_H and add their
+     *     neighbours to pre_H. Call only after apply() has been executed.
+     */
+    void finish();
+
+    /** Remove each v in n_i from pre_H, and dsg */
+    void remove_ni(const std::set<BVertex>& ni);
+
 };
 
 #endif

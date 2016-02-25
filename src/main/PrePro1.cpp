@@ -10,43 +10,9 @@ PrePro1::PrePro1(DSGraph& dsg)
         :dsg(dsg)
         { }
 
-void PrePro1::apply() {
-    // Got to iterate over vertices and delete vertices at same time.
-    // So don't do it via dsg.vertices(). Not clear what happens if you
-    // delete vertex lying "ahead" of current vertex.
-    // Instead: get set of BVertices, iterate over it. At beginning of loop
-    // check if vertex still in dsg. If not, continue.
-    std::set<BVertex> bverts = dsg.get_set_BVertices();
-    for(std::set<BVertex>::iterator bverts_it = bverts.begin();
-            bverts_it != bverts.end(); ++bverts_it) {
-        BVertex v = *bverts_it;
-        if(!dsg.contains_BVertex(v)) { continue; }
-        IVertex v_I = dsg.get_IVertex(v);
-        std::vector< std::set<BVertex> > nis = this->get_n_is(v);
-        if(nis[2].empty()) {
-            this->no_effect.insert(v_I);
-            continue;    // do nothing if n3.empty()
-        }
-
-        // remove n3, n2
-        // upd this->pre_H (what's not in graph cannot be in H)
-        for(std::set<BVertex>::iterator it = nis[2].begin();
-                it != nis[2].end(); ++it) {
-            this->pre_H.erase(dsg.get_IVertex(*it));
-            dsg.remove_BVertex(*it);
-        }
-        for(std::set<BVertex>::iterator it = nis[1].begin();
-                it != nis[1].end(); ++it) {
-            this->pre_H.erase(dsg.get_IVertex(*it));
-            dsg.remove_BVertex(*it);
-        }
-
-        this->pre_D.insert(v_I);
-        std::set<IVertex> nv_new_I = dsg.get_adj_IVertices(v_I);
-        this->pre_H.erase(v_I);
-        this->pre_H.insert(nv_new_I.begin(), nv_new_I.end());
-        dsg.remove_BVertex(v);
-    }
+void PrePro1::run() {
+    this->init();
+    this->finish();
     return;
 }
 
@@ -76,4 +42,57 @@ std::vector< std::set<BVertex> > PrePro1::get_n_is(const BVertex v) const {
     }
 
     return std::vector< std::set<BVertex> >{ n1, n2, n3 };
+}
+
+void PrePro1::init() {
+    // for v in V(G)
+    //     - calc v's n_is and store them in this->m
+    //     - if n3 != {}, add v to pre_D
+    for(std::pair<BVertex_it, BVertex_it> it = this->dsg.vertices();
+            it.first != it.second; ++it.first) {
+        BVertex bv = *it.first;
+        std::vector< std::set<BVertex> > nis = this->get_n_is(bv);
+        this->m[this->dsg.get_IVertex(bv)] = nis;
+        if(!nis[2].empty()) { pre_D.insert(dsg.get_IVertex(bv)); }
+    }
+    return;
+}
+
+void PrePro1::finish() {
+    // for each v in pre_D
+    //     - if v no longer in dsg: continue
+    //     - remove v from pre_H (what's in pre_D will be deleted)
+    //     - remove n2(v), n3(v) of v from dsg, pre_H, pre_D
+    //     - add N(v) to pre_H
+    //     - remove v from dsg
+    for(std::set<IVertex>::iterator d_it = pre_D.begin(); d_it != pre_D.end();
+            ++d_it) {
+        IVertex v = *d_it;
+        this->pre_H.erase(v);
+        if(!this->dsg.contains_IVertex(v)) { continue; }
+        std::vector< std::set<BVertex> > nis = this->m[v];
+        
+        // remove n2(v), n3(v) from dsg
+        this->remove_ni(nis[1]);
+        this->remove_ni(nis[2]);
+
+        // add n(v) (what is remaining of it after removing n2, n3) to pre_H
+        std::set<IVertex> nv = this->dsg.get_adj_IVertices(v);
+        this->pre_H.insert(nv.begin(), nv.end());
+
+        // remove v fromd dsg
+        dsg.remove_IVertex(v);
+    }
+    return;
+}
+
+void PrePro1::remove_ni(const std::set<BVertex>& ni) {
+    for(std::set<BVertex>::iterator it = ni.begin(); it != ni.end(); ++it) {
+        if(!this->dsg.contains_BVertex(*it)) { continue; }
+        IVertex v = this->dsg.get_IVertex(*it);
+        this->pre_H.erase(v);
+        this->pre_D.erase(v);
+        this->dsg.remove_IVertex(v);
+    }
+    return;
 }
