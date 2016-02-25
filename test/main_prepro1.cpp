@@ -16,16 +16,15 @@ typedef std::set<IVertex> setI;
 typedef std::set<BVertex> setB;
 typedef std::vector<setB> res_t;
 
-TEST(PrePro1, apply) {
+TEST(PrePro1, PrePro1) {
     // g11.txt
     DSGraph g11 = Parser().parse_graph_int("graphs/g11.txt");
     PrePro1 pp11(g11);
-    pp11.apply();
+    pp11.run();
 
     // check pp attributes
     EXPECT_EQ(setI(), pp11.pre_H);
     EXPECT_EQ(setI({ 0, 1, 2, 7 }), pp11.pre_D);
-    EXPECT_EQ(setI(), pp11.no_effect);
 
     // check graph
     EXPECT_EQ(0, g11.num_vertices());
