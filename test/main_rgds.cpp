@@ -10,11 +10,14 @@
 #include "../src/main/spd.hpp"
 #include "../src/utility/Parser.hpp"
 #include "../src/utility/helpers.hpp"
+#include "../src/utility/setops.hpp"
 
 namespace {
 
 /** To tell rgds::rgds(...) how many cores are available */
 const unsigned int ncores = 4;
+
+typedef std::set<IVertex> setI;
 
 /** 
  * Execute rgds tests on a graph
@@ -23,7 +26,6 @@ const unsigned int ncores = 4;
  * @param pp1 if true, Preprocessing rule 1 is applied
  */
 void test_rgds(const char* gpath, unsigned int dom_num, bool pp1) {
-    typedef std::set<IVertex> setI;
     DSGraph dsg = Parser().parse_graph_int(gpath);
     DSGraph dsg_orig(dsg);    // as PreProc changes dsg
     std::vector<IVertex> spd_ord = spd::build_order(dsg);
@@ -83,4 +85,35 @@ TEST(rgds, rgdsPP1) {
     test_rgds("graphs/g_distance.txt", 4, true);
     test_rgds("graphs/empty.txt", 0, true);
 }
+
+TEST(rgds, preHpreD) {
+    // g13.txt with pre_D and pre_H
+    DSGraph dsg1 = Parser().parse_graph_int("graphs/g13.txt");
+    EXPECT_EQ(17, dsg1.num_vertices());
+    setI pre_H1{ 6, 8, 15, 16, 19, 24, 31, 32, 36, 44, 45, 59 };
+    setI pre_D1{ 1, 7, 10, 17, 18, 22, 30, 46, 49 };
+
+    // Given pre_H, { 16, 36 } can dominate dsg1
+    setI exp1(pre_D1);
+    exp1.insert(16); exp1.insert(36);
+    std::vector<IVertex> spd_ord1 = spd::build_order(dsg1);
+    rgds::result_t res1 = rgds::rgds(dsg1, pre_H1, std::list<setI>(), 2,
+            pre_D1, spd_ord1, 1);
+    EXPECT_EQ(true, res1.second);
+    EXPECT_EQ(exp1, res1.first);
+
+
+    DSGraph dsg2 = Parser().parse_graph_int("graphs/g1.txt");
+    EXPECT_EQ(6, dsg2.num_vertices());
+    std::vector<IVertex> spd_ord2 = spd::build_order(dsg2);
+    rgds::result_t res2 = rgds::rgds(dsg2, setI(), std::list<setI>(), 2,
+            setI({ 666 }), spd_ord2, 1);
+    EXPECT_EQ(true, res2.second);
+    EXPECT_EQ(setI({ 0, 3, 666 }), res2.first);
+
+    // intersect with VG, so that helpers::is_ds can be used
+    setI VG2 = dsg2.get_set_IVertices();
+    EXPECT_TRUE(helpers::is_ds(dsg2, setops::inters_new(res2.first, VG2)));
+}
+
 }    // namespace
