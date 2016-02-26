@@ -7,7 +7,8 @@
  * @brief Create a random graph with n vertices.
  *
  * For each pair of vertices u, v with u != v, add edge {u, v} if random
- * int in [0, 1] equals one.
+ * value in [0,1] is greater than a random threshold in [0,1]. Calculate
+ * this threshold new for each vertex in outer loop.
  *
  * The set of vertices is {0, ..., n-1}.
  */
