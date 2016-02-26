@@ -87,7 +87,6 @@ rgds::result_t rgds::solve(std::list<DSGraph*>* comps, std::set<IVertex> H,
         std::list< std::set<IVertex> > Fs, unsigned int k,
         std::set<IVertex> VG, std::set<IVertex> D,
         const std::vector<IVertex>& spd_ord, const unsigned int ncores) {
-
     // check termination conditions
     if(comps->size() > k) { return rgds::no_solution_res(); }
     if(rgds::diams_exceeding(comps, k)) { return rgds::no_solution_res(); }
@@ -214,9 +213,11 @@ rgds::result_t rgds::try_f(FuncIter& f, std::list<DSGraph*>* comps,
     if(!HS_res.second) { return rgds::no_solution_res(); }
 
     // sum up GDS resp. backland k's
+    // Important: for comps substract size of input D, i.e. only count what's
+    // required to dominate component itself
     unsigned int sum_k = 0;
     for(unsigned int i = 0; i < comps_res.first.size(); ++i) {
-        sum_k += comps_res.first[i].first.size();
+        sum_k += (comps_res.first[i].first.size() - D.size());
     }
     sum_k += HS_res.first.size();
 
