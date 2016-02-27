@@ -43,22 +43,21 @@ private:
     std::map< IVertex, std::vector< std::set<BVertex> > > m;
     
     /**
-     * Iterate through vertices: add to pre_D and remove n2, n3
-     *     - if N3(v).empty()
-     *       - continue
-     *     - insert N(v) to pre_D
+     * For each v in V(G):
+     * - calculate v's n_is and store them in this->m
+     * - if N3(v) != { }, add v to pre_D
      */
     void init();
 
     /**
-     * Clear graph: remove vertices in pre_D from dsg & pre_H and add their
-     *     neighbours to pre_H. Call only after apply() has been executed.
+     * Clear graph: remove vertices in pre_D (which are still in dsg) 
+     * from dsg & pre_H and add their neighbours to pre_H. Call only after
+     * init() has been executed.
      */
     void finish();
 
-    /** Remove each v in n_i from pre_H, and dsg */
+    /** Remove each v in n_i (that's still in dsg) from pre_H, pre_D and dsg */
     void remove_ni(const std::set<BVertex>& ni);
-
 };
 
 #endif
