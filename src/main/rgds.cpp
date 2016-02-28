@@ -63,6 +63,7 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     }
 
     // try v \notin GDS
+    if(N1v.empty() && H.find(v) == H.end()) { return rgds::no_solution_res(); }
     std::set<IVertex> W2 = setops::setminus_new(VG_minus_v, H);
     std::list<DSGraph*>* comps2 = WComps(DSG, rgds::trans_I2B(DSG, W2)).get();
     if(!N1v.empty() && H.find(v) == H.end()) { Fs.push_back(N1v); }
