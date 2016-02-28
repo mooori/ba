@@ -6,6 +6,7 @@
 
 #include "../src/main/DSGraph.hpp"
 #include "../src/main/PrePro1.hpp"
+#include "../src/main/PrePro2.hpp"
 #include "../src/main/rgds.hpp"
 #include "../src/main/spd.hpp"
 #include "../src/utility/Parser.hpp"
@@ -20,16 +21,19 @@ const unsigned int ncores = 4;
 typedef std::set<IVertex> setI;
 
 /** 
- * Execute rgds tests on a graph
+ * Execute rgds tests on a graph. Only one of pp1 and pp2 may be true
  * @param gpath path to graph's text file
  * @param dom_num graph's domination number
  * @param pp1 if true, Preprocessing rule 1 is applied
+ * @param pp2 if true, Preprocessing rule 2 is applied
  */
-void test_rgds(const char* gpath, unsigned int dom_num, bool pp1) {
+void test_rgds(const char* gpath, unsigned int dom_num, bool pp1, bool pp2) {
     DSGraph dsg = Parser().parse_graph_int(gpath);
     DSGraph dsg_orig(dsg);    // as PreProc changes dsg
     std::vector<IVertex> spd_ord = spd::build_order(dsg);
     std::set<IVertex> pre_H, pre_D;
+
+    if(pp1 && pp2) { throw std::runtime_error("cannot combine pp1 and pp2"); }
 
     // preprocessing
     if(pp1) {
@@ -37,6 +41,12 @@ void test_rgds(const char* gpath, unsigned int dom_num, bool pp1) {
         pp1.run();
         pre_H = pp1.pre_H;
         pre_D = pp1.pre_D;
+    }
+    else if(pp2) {
+        PrePro2 pp2(dsg);
+        pp2.run();
+        pre_H = pp2.pre_H;
+        pre_D = pp2.pre_D;
     }
 
     // test D with |D| = dom_num is found
@@ -59,31 +69,74 @@ void test_rgds(const char* gpath, unsigned int dom_num, bool pp1) {
 }
 
 TEST(rgds, rgdsNoPP) {
-    test_rgds("graphs/g2.txt", 2, false);
-    test_rgds("graphs/g3.txt", 3, false);
-    test_rgds("graphs/g4.txt", 3, false);
-    test_rgds("graphs/g5.txt", 3, false);
-    test_rgds("graphs/g6.txt", 3, false);
-    test_rgds("graphs/g7.txt", 2, false);
-    test_rgds("graphs/g8.txt", 3, false);
-    test_rgds("graphs/g9.txt", 2, false);
-    test_rgds("graphs/g11.txt", 4, false);
-    test_rgds("graphs/g_distance.txt", 4, false);
-    test_rgds("graphs/empty.txt", 0, false);
+    test_rgds("graphs/g2.txt", 2, false, false);
+    test_rgds("graphs/g3.txt", 3, false, false);
+    test_rgds("graphs/g4.txt", 3, false, false);
+    test_rgds("graphs/g5.txt", 3, false, false);
+    test_rgds("graphs/g6.txt", 3, false, false);
+    test_rgds("graphs/g7.txt", 2, false, false);
+    test_rgds("graphs/g8.txt", 3, false, false);
+    test_rgds("graphs/g9.txt", 2, false, false);
+    test_rgds("graphs/g11.txt", 4, false, false);
+    test_rgds("graphs/g15.txt", 2, false, false);
+    test_rgds("graphs/g_distance.txt", 4, false, false);
+    test_rgds("graphs/just_a_vertex.txt", 1, false, false);
+    test_rgds("graphs/empty.txt", 0, false, false);
 }
 
 TEST(rgds, rgdsPP1) {
-    test_rgds("graphs/g2.txt", 2, true);
-    test_rgds("graphs/g3.txt", 3, true);
-    test_rgds("graphs/g4.txt", 3, true);
-    test_rgds("graphs/g5.txt", 3, true);
-    test_rgds("graphs/g6.txt", 3, true);
-    test_rgds("graphs/g7.txt", 2, true);
-    test_rgds("graphs/g8.txt", 3, true);
-    test_rgds("graphs/g9.txt", 2, true);
-    test_rgds("graphs/g11.txt", 4, true);
-    test_rgds("graphs/g_distance.txt", 4, true);
-    test_rgds("graphs/empty.txt", 0, true);
+    test_rgds("graphs/g2.txt", 2, true, false);
+    test_rgds("graphs/g3.txt", 3, true, false);
+    test_rgds("graphs/g4.txt", 3, true, false);
+    test_rgds("graphs/g5.txt", 3, true, false);
+    test_rgds("graphs/g6.txt", 3, true, false);
+    test_rgds("graphs/g7.txt", 2, true, false);
+    test_rgds("graphs/g8.txt", 3, true, false);
+    test_rgds("graphs/g9.txt", 2, true, false);
+    test_rgds("graphs/g11.txt", 4, true, false);
+    test_rgds("graphs/g15.txt", 2, true, false);
+    test_rgds("graphs/g_distance.txt", 4, true, false);
+    test_rgds("graphs/empty.txt", 0, true, false);
+}
+
+TEST(rgds, rgdsPP2) {
+    test_rgds("graphs/g2.txt", 2, false, true);
+    test_rgds("graphs/g3.txt", 3, false, true);
+    test_rgds("graphs/g4.txt", 3, false, true);
+    test_rgds("graphs/g5.txt", 3, false, true);
+    test_rgds("graphs/g6.txt", 3, false, true);
+    test_rgds("graphs/g7.txt", 2, false, true);
+    test_rgds("graphs/g8.txt", 3, false, true);
+    test_rgds("graphs/g9.txt", 2, false, true);
+    test_rgds("graphs/g11.txt", 4, false, true);
+    test_rgds("graphs/g15.txt", 2, false, true);
+    test_rgds("graphs/g_distance.txt", 4, false, true);
+    test_rgds("graphs/empty.txt", 0, false, true);
+    test_rgds("graphs/g14.txt", 5, false, true);
+    
+    /*
+    DSGraph dsg = Parser().parse_graph_int("graphs/g9.txt");
+    DSGraph dsg_orig(dsg);    // as PreProc changes dsg
+    std::vector<IVertex> spd_ord = spd::build_order(dsg);
+    std::set<IVertex> pre_H, pre_D;
+
+    PrePro2 pp2(dsg);
+    pp2.run();
+    pre_H = pp2.pre_H;
+    pre_D = pp2.pre_D;
+
+    EXPECT_LE(pre_D.size(), 2);
+
+    helpers::print("pre_D", pre_D);
+    helpers::print("pre_H", pre_H);
+    helpers::print(dsg);
+
+    rgds::result_t res = rgds::rgds(dsg, pre_H, std::list<setI>(),
+            2 - pre_D.size(), pre_D, spd_ord, 4);
+    EXPECT_EQ(setI({ 1, 2, 10, 16, 19 }), res.first);
+    EXPECT_EQ(true, res.second);
+    */
+
 }
 
 TEST(rgds, preHpreD) {

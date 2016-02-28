@@ -16,6 +16,22 @@ typedef std::set<IVertex> setI;
 typedef std::set<BVertex> setB;
 typedef std::vector<setB> res_t;
 
+TEST(PrePro2, PrePro2) {
+    // g14.txt
+    DSGraph g14 = Parser().parse_graph_int("graphs/g14.txt");
+    PrePro2 pp14(g14);
+    pp14.run();
+
+    // How to test remaining graph **seriously**?
+    // So far indirectly via testing if after PP2 rgds still finds min dom set
+    // check pp attributes
+    EXPECT_EQ(setI({ 0, 5, 7 }), pp14.pre_H);
+    EXPECT_EQ(setI({ 1, 10, 16, 19 }), pp14.pre_D);
+
+    // check graph
+    EXPECT_EQ(setI({ 0, 2, 5, 7 }), g14.get_set_IVertices());
+}
+
 TEST(PrePro2, getNIs) {
     // g14.txt
     DSGraph g14 = Parser().parse_graph_int("graphs/g14.txt");
