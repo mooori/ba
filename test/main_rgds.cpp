@@ -113,30 +113,6 @@ TEST(rgds, rgdsPP2) {
     test_rgds("graphs/g_distance.txt", 4, false, true);
     test_rgds("graphs/empty.txt", 0, false, true);
     test_rgds("graphs/g14.txt", 5, false, true);
-    
-    /*
-    DSGraph dsg = Parser().parse_graph_int("graphs/g9.txt");
-    DSGraph dsg_orig(dsg);    // as PreProc changes dsg
-    std::vector<IVertex> spd_ord = spd::build_order(dsg);
-    std::set<IVertex> pre_H, pre_D;
-
-    PrePro2 pp2(dsg);
-    pp2.run();
-    pre_H = pp2.pre_H;
-    pre_D = pp2.pre_D;
-
-    EXPECT_LE(pre_D.size(), 2);
-
-    helpers::print("pre_D", pre_D);
-    helpers::print("pre_H", pre_H);
-    helpers::print(dsg);
-
-    rgds::result_t res = rgds::rgds(dsg, pre_H, std::list<setI>(),
-            2 - pre_D.size(), pre_D, spd_ord, 4);
-    EXPECT_EQ(setI({ 1, 2, 10, 16, 19 }), res.first);
-    EXPECT_EQ(true, res.second);
-    */
-
 }
 
 TEST(rgds, preHpreD) {
