@@ -52,9 +52,11 @@ gtest_main.a : gtest-all.o gtest_main.o
 # =============================================================================
 SRC := $(wildcard *.cpp)
 OBJ := $(SRC:.cpp=.o)
-# LINK: must exclude ../src/main.o
-LINK := $(subst ../src/main/main.o,,$(wildcard ../src/main/*.o)) \
+LINK_ALL := $(subst ../src/main/main.o,,$(wildcard ../src/main/*.o)) \
 		$(wildcard ../src/utility/*.o)
+# LINK: must exclude other fails containing main() functions
+MAINS := ../src/main.o and ../src/main/run_ex_Kt.o
+LINK := $(filter-out $(MAINS),$(LINK_ALL))
 
 # Get object files required for spd
 SPD_PATH := ../../BA-shortest-paths-decomposition

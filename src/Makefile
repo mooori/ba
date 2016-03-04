@@ -24,6 +24,10 @@ SPD_OBJ_LINK := $(filter-out $(SPD_EXCL),$(SPD_OBJ_ALL))
 dsSolver: $(OBJ)
 	$(CXX) -o $@ $(OBJ) $(SPD_OBJ_LINK) $(LIBS)
 
+runExKt: $(OBJ) main/run_ex_Kt.o
+	$(CXX) -o $@ main/run_ex_Kt.o $(filter-out main/main.o,$(OBJ)) \
+			$(SPD_OBJ_LINK) $(LIBS)
+
 include $(OBJ:.o=.d)
 
 %.d: %.cpp
