@@ -14,22 +14,22 @@
 #include "../utility/Parser.hpp"
 
 int show_help_exit() {
-    std::cout << "./dsSolver graph rgds pp0||pp1||pp2 k ncores \n./dsSolver graph pp0 bf\n";
+    std::cout << "./dsSolver graph rgds pp0||pp1||pp2 k ncores \n./dsSolver graph bf pp0 bf\n";
     return 0;
 }
 
 int main(int argc, char* argv[]) {
 
-    if(argc < 4) { show_help_exit(); }
+    if(argc < 4) { return show_help_exit(); }
     
     std::string method(argv[2]);
     std::string pp(argv[3]);
     
-    if(method == "bf" && argc != 4) { show_help_exit(); }
-    if(method == "rgds" && argc != 6) { show_help_exit(); }
+    if(method == "bf" && argc != 4) { return show_help_exit(); }
+    if(method == "rgds" && argc != 6) { return show_help_exit(); }
 
-    if(method != "bf" && method != "rgds") { show_help_exit(); }
-    if(pp != "pp0" && pp != "pp1" && pp != "pp2") { show_help_exit(); }
+    if(method != "bf" && method != "rgds") { return show_help_exit(); }
+    if(pp != "pp0" && pp != "pp1" && pp != "pp2") { return show_help_exit(); }
 
     if(method == "bf" && pp != "pp0") {
         std::cout << "Brute force only with pp0\n";
