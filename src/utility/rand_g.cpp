@@ -12,7 +12,7 @@ DSGraph rand_g::create(unsigned int n) {
         dsg.add_IVertex(i);
     }
 
-    // create random number generator for unsigned int [0,1]
+    // create random number generator for float [0,1]
     // (taken from cppreference.com: std::uniform_real_distribution)
     // for threshold
     std::random_device rd_t;
