@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
     std::cout << "done, num_vertices = " << dsg.num_vertices() << "\n";
 
     if(pp == "pp1") {
+        std::time_t start_pp = std::time(nullptr);
         std::cout << "Apply Preprocessing Rule 1...";
         PrePro1 pp1(dsg);
         pp1.run();
@@ -53,8 +54,10 @@ int main(int argc, char* argv[]) {
         pre_D = pp1.pre_D;
         std::cout << "done; num_vertices remaining: " <<
                 dsg.num_vertices() << "\n";
+        std::cout << "pp time: " << std::time(nullptr) - start_pp << "\n";
     }
     else if(pp == "pp2") {
+        std::time_t start_pp = std::time(nullptr);
         std::cout << "Apply Preprocessing Rule 2...";
         PrePro2 pp2(dsg);
         pp2.run();
@@ -62,6 +65,7 @@ int main(int argc, char* argv[]) {
         pre_D = pp2.pre_D;
         std::cout << "done; num_vertices remaining: " <<
                 dsg.num_vertices() << "\n";
+        std::cout << "pp time: " << std::time(nullptr) - start_pp << "\n";
     }
     
     if(method == "rgds") {
@@ -83,8 +87,10 @@ int main(int argc, char* argv[]) {
         }
         
         std::cout << "Constructing spd_ord...";
+        std::time_t start_spd = std::time(nullptr);
         std::vector<IVertex> spd_ord = spd::build_order(dsg);
         std::cout << "done\n";
+        std::cout << "spd time: " << std::time(nullptr) - start_spd << "\n";
 
         std::cout << "Evaluating rgds...\n";
         rgds::result_t res = rgds::rgds(dsg, pre_H, std::list<setI>(),
