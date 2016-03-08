@@ -72,7 +72,8 @@ struct ttotals_t {
     std::time_t pp;
     std::time_t spd;
     std::time_t rgds;
-    ttotals_t() : pp(0), spd(0), rgds(0) { }
+    unsigned int edges;
+    ttotals_t() : pp(0), spd(0), rgds(0), edges(0) { }
 };
 
 void run(std::string pp, unsigned int t, unsigned int ncores) {
@@ -84,7 +85,7 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
     for(std::list<unsigned int>::iterator it = nverts.begin();
             it != nverts.end(); ++it) {
         // open file
-        std::ofstream outf((const char*) "../stats/nv_" + std::to_string(*it));
+        std::ofstream outf((const char*) "../stats/nv_" + std::to_string(*it) + "_t_" + std::to_string(t) + "_" + pp);
         if(!outf) {
             throw std::runtime_error("failed to open file for " + *it);
         }
@@ -100,18 +101,30 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
 
         outf << "\n\n" << std::string(80, '=') << "\n";
         outf << "Total times are:\n";
-        outf << "nverts = " << *it << "\ttime: " << secs_since(start_nverts)
-                << "\n";
-        outf << "pp time: " << ttotals.pp << " for pp = " << pp << "\n";
-        outf << "spd time: " << ttotals.spd << "\n";
-        outf << "rgds time: " << ttotals.rgds << "\n";
+
+        std::time_t secs_tot = secs_since(start_nverts);
+        outf << "nverts = " << *it << "\ttime: " << secs_tot << ";\t";
+        outf << "avg per graph: " << secs_tot/ngraphs << "\n";
+        
+        outf << "avg edges per graph: " << ttotals.edges/ngraphs << "\n";
+
+        outf << "pp time: " << ttotals.pp << " for pp = " << pp << ";\t";
+        outf << "avg per graph: " << ttotals.pp/ngraphs << "\n";
+
+        outf << "spd time: " << ttotals.spd << ";\t";
+        outf << "avg per graph: " << ttotals.spd/ngraphs << "\n";
+
+        outf << "rgds time: " << ttotals.rgds << ";\t";
+        outf << "avg per graph: " << ttotals.rgds/ngraphs << "\n";
         outf.close();
     }
 }
 
 void run_graph(unsigned int nverts, std::string pp, unsigned int t,
         unsigned int ncores, struct ttotals_t& ttotals, std::ofstream& outf) {
-    DSGraph dsg = rand_g_ex_Kt::create(nverts, t);
+    std::pair<DSGraph, unsigned int> wrapper = rand_g_ex_Kt::create(nverts, t);
+    ttotals.edges += wrapper.second;
+    DSGraph dsg(wrapper.first);
     DSGraph dsg_orig(dsg);    // for verification, as PrePro changes dsg
     std::set<IVertex> pre_H, pre_D;
 
