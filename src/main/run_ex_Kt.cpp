@@ -78,7 +78,8 @@ struct ttotals_t {
 
 void run(std::string pp, unsigned int t, unsigned int ncores) {
     std::list<unsigned int> nverts{
-        10, 100, 500, 1000, 5000, 10000, 20000, 50000, 80000, 100000  
+        10, 20, 30, 40, 50, 80, 100, 500, 1000, 5000, 10000, 20000, 50000,
+        80000, 100000  
     };
     unsigned int ngraphs = 100;
 
@@ -163,8 +164,8 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     // rgds
     std::time_t start_rgds = std::time(nullptr);
     rgds::result_t res = rgds::rgds(dsg, pre_H,
-            std::list< std::set<IVertex> >(), dsg.num_vertices() - pre_D.size(),
-            pre_D, spd_ord, ncores);
+            std::list< std::set<IVertex> >(),
+            dsg_orig.num_vertices() - pre_D.size(), pre_D, spd_ord, ncores);
     std::time_t rgds_secs = secs_since(start_rgds);
     ttotals.rgds += rgds_secs;
     outf << "\ttime rgds: " << rgds_secs << "\n";
