@@ -73,9 +73,12 @@ struct ttotals_t {
     std::time_t pp;
     std::time_t spd;
     std::time_t rgds;
+    std::time_t wcol_t;
     unsigned int edges;
     unsigned int n_pp_del;    // number of edges deleted in preprocessing
-    ttotals_t() : pp(0), spd(0), rgds(0), edges(0), n_pp_del(0) { }
+    unsigned int wcol_sum;
+    ttotals_t() : pp(0), spd(0), rgds(0), wcol_t(0), edges(0), n_pp_del(0),
+    wcol_sum(0) { }
 };
 
 /**
@@ -146,6 +149,11 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
 
         outf << "rgds time: " << ttotals.rgds << ";\t";
         outf << "avg per graph: " << ttotals.rgds/ngraphs << "\n";
+
+        outf << "avg wcol number = " << ttotals.wcol_sum/ngraphs << "\n";
+        outf << "wcol time: " << ttotals.wcol_t << ";\t";
+        outf << "avg per graph: " << ttotals.wcol_t/ngraphs << "\n";
+
         outf.close();
     }
 }
@@ -219,7 +227,15 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     appendf(fname, "\tsize of dominating set: " +
             std::to_string(res.first.size()) + "\n");
 
+    // wcol
+    appendf_ltime(fname, "\tStarting wcol at ");
+    std::time_t start_wcol = std::time(nullptr);
+    int wcol = spd::wcol_r(dsg_orig, (6 * res.first.size()) + 2);
+    ttotals.wcol_sum += wcol;
+    std::time_t wcol_secs = secs_since(start_wcol);
+    ttotals.wcol_t += wcol_secs;
+    appendf(fname, "\twcol = " + std::to_string(wcol) +
+            "\ttime = " + std::to_string(wcol_secs) + "\n");
+
     return;
 }
-
-
