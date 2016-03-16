@@ -16,6 +16,9 @@ namespace spd {
     /** Build DSGraph's spd order */
     std::vector<IVertex> build_order(const DSGraph& dsg);
 
+    /** Get wcol_r */
+    int wcol_r(const DSGraph& dsg, unsigned int r);
+
 }    //namespace
 
 #endif
