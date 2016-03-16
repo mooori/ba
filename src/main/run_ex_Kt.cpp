@@ -39,10 +39,10 @@ void run(std::string pp, unsigned int t, unsigned int ncores);
  * Do stuff for a single graph
  * @param nverts number of vertices of graph
  * @param ttotals total times spent for activities pp, spd and rgds
- * @param outf file to stream to
+ * @param fname name of file to which to append
  */
 void run_graph(unsigned int nverts, std::string pp, unsigned int t,
-        unsigned int ncores, struct ttotals_t& ttotals, std::ofstream& outf);
+        unsigned int ncores, struct ttotals_t& ttotals, std::string fname);
 
 /** Get number of seconds since start */
 std::time_t secs_since(std::time_t start) {
@@ -76,6 +76,18 @@ struct ttotals_t {
     ttotals_t() : pp(0), spd(0), rgds(0), edges(0) { }
 };
 
+/**
+ * Append to file, doing open - write -close. Do it for each write, since
+ * may not have time to wait till whole programm finished.
+ */
+void appendf(std::string fname, std::string txt) {
+    std::ofstream outf;
+    outf.open(fname, std::ios::app);
+    outf << txt;
+    outf.close();
+    return;
+}
+
 void run(std::string pp, unsigned int t, unsigned int ncores) {
     std::list<unsigned int> nverts{
         10, 20, 30, 40, 50, 80, 100, 500, 1000, 5000, 10000, 20000, 50000,
@@ -86,20 +98,19 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
     for(std::list<unsigned int>::iterator it = nverts.begin();
             it != nverts.end(); ++it) {
         // open file
-        std::ofstream outf((const char*) "../stats/nv_" + std::to_string(*it) + "_t_" + std::to_string(t) + "_" + pp);
-        if(!outf) {
-            throw std::runtime_error("failed to open file for " + *it);
-        }
-
+        std::string fname = "../stats/nv_" + std::to_string(*it) + "_t_" + std::to_string(t) + "_" + pp;
+        
         std::time_t start_nverts = std::time(nullptr);
         struct ttotals_t ttotals;
 
         for(unsigned int i = 0; i < ngraphs; ++i) {
             std::cout << "Graph " << i << " for nverts = " << *it << "\n";
-            outf << "Graph " << i << "\n";
-            run_graph(*it, pp, t, ncores, ttotals, outf);
+            appendf(fname, "Graph " + std::to_string(i) + "\n");
+            run_graph(*it, pp, t, ncores, ttotals, fname);
         }
 
+        std::ofstream outf;
+        outf.open(fname, std::ios::app);
         outf << "\n\n" << std::string(80, '=') << "\n";
         outf << "Total times are:\n";
 
@@ -122,7 +133,7 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
 }
 
 void run_graph(unsigned int nverts, std::string pp, unsigned int t,
-        unsigned int ncores, struct ttotals_t& ttotals, std::ofstream& outf) {
+        unsigned int ncores, struct ttotals_t& ttotals, std::string fname) {
     std::pair<DSGraph, unsigned int> wrapper = rand_g_ex_Kt::create(nverts, t);
     ttotals.edges += wrapper.second;
     DSGraph dsg(wrapper.first);
@@ -148,10 +159,13 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     if(pp == "pp1" || pp == "pp2") {    // time & printing for both identical
         std::time_t pp_secs = secs_since(start_pp);
         ttotals.pp += pp_secs;
+        std::ofstream outf;
+        outf.open(fname, std::ios::app);
         outf << "\ttime pp: " << pp_secs << " for pp = " << pp << "\n";
         outf << "\tvertices remaining: " << dsg.num_vertices() <<
                 "\tvertices deleted: " << 
                 dsg_orig.num_vertices() - dsg.num_vertices() << "\n";
+        outf.close();
     }
 
     // spd
@@ -159,7 +173,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     std::vector<IVertex> spd_ord = spd::build_order(dsg);
     std::time_t spd_secs = secs_since(start_spd);
     ttotals.spd += spd_secs;
-    outf << "\ttime spd: " << spd_secs << "\n";
+    appendf(fname, "\ttime spd: " + std::to_string(spd_secs) + "\n");
 
     // rgds
     std::time_t start_rgds = std::time(nullptr);
@@ -168,7 +182,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
             dsg_orig.num_vertices() - pre_D.size(), pre_D, spd_ord, ncores);
     std::time_t rgds_secs = secs_since(start_rgds);
     ttotals.rgds += rgds_secs;
-    outf << "\ttime rgds: " << rgds_secs << "\n";
+    appendf(fname, "\ttime rgds: " + std::to_string(rgds_secs) + "\n");
 
     // check result
     if(!res.second) {
@@ -179,7 +193,10 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
         throw std::runtime_error("rgds returned D which is not dom set");
     }
 
-    outf << "\tsize of dominating set: " << res.first.size() << "\n";
+    appendf(fname, "\tsize of dominating set: " +
+            std::to_string(res.first.size()) + "\n");
 
     return;
 }
+
+
