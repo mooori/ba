@@ -1,5 +1,6 @@
 #include <ctime>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <list>
 #include <set>
@@ -73,7 +74,8 @@ struct ttotals_t {
     std::time_t spd;
     std::time_t rgds;
     unsigned int edges;
-    ttotals_t() : pp(0), spd(0), rgds(0), edges(0) { }
+    unsigned int n_pp_del;    // number of edges deleted in preprocessing
+    ttotals_t() : pp(0), spd(0), rgds(0), edges(0), n_pp_del(0) { }
 };
 
 /**
@@ -86,6 +88,17 @@ void appendf(std::string fname, std::string txt) {
     outf << txt;
     outf.close();
     return;
+}
+
+/** Append some string plus string of local time to fname (see std::put_time)*/
+void appendf_ltime(std::string fname, std::string txt) {
+    std::ofstream outf;
+    outf.open(fname, std::ios::app);
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    outf.imbue(std::locale("de_DE.utf8"));
+    outf << txt << std::put_time(&tm, "%c %Z") << "\n";
+    outf.close();
 }
 
 void run(std::string pp, unsigned int t, unsigned int ncores) {
@@ -120,8 +133,13 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
         
         outf << "avg edges per graph: " << ttotals.edges/ngraphs << "\n";
 
-        outf << "pp time: " << ttotals.pp << " for pp = " << pp << ";\t";
-        outf << "avg per graph: " << ttotals.pp/ngraphs << "\n";
+        if(pp == "pp1" || pp == "pp2") {
+            outf << "pp time: " << ttotals.pp << " for pp = " << pp << ";\t";
+            outf << "avg per graph: " << ttotals.pp/ngraphs << "\n";
+            outf << "pp total number of verts deleted: " << ttotals.n_pp_del <<
+                    "thats " << float(ttotals.n_pp_del)/float(*it * ngraphs)
+                    << " of all vertices\n";
+        }
 
         outf << "spd time: " << ttotals.spd << ";\t";
         outf << "avg per graph: " << ttotals.spd/ngraphs << "\n";
@@ -143,6 +161,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     // preprocessing
     std::time_t start_pp = std::time(nullptr);
     if(pp == "pp1") {
+        appendf_ltime(fname, "\tStarting pp1 at ");
         PrePro1 pp1(dsg);
         pp1.run();
         pre_H = pp1.pre_H;
@@ -150,6 +169,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     }
 
     if(pp == "pp2") {
+        appendf_ltime(fname, "\tStarting pp2 at ");
         PrePro2 pp2(dsg);
         pp2.run();
         pre_H = pp2.pre_H;
@@ -159,6 +179,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     if(pp == "pp1" || pp == "pp2") {    // time & printing for both identical
         std::time_t pp_secs = secs_since(start_pp);
         ttotals.pp += pp_secs;
+        ttotals.n_pp_del += nverts - pre_D.size();
         std::ofstream outf;
         outf.open(fname, std::ios::app);
         outf << "\ttime pp: " << pp_secs << " for pp = " << pp << "\n";
@@ -169,6 +190,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     }
 
     // spd
+    appendf_ltime(fname, "\tStarting spd at ");
     std::time_t start_spd = std::time(nullptr);
     std::vector<IVertex> spd_ord = spd::build_order(dsg);
     std::time_t spd_secs = secs_since(start_spd);
@@ -176,6 +198,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     appendf(fname, "\ttime spd: " + std::to_string(spd_secs) + "\n");
 
     // rgds
+    appendf_ltime(fname, "\tStarting rgds at ");
     std::time_t start_rgds = std::time(nullptr);
     rgds::result_t res = rgds::rgds(dsg, pre_H,
             std::list< std::set<IVertex> >(),
