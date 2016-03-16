@@ -39,7 +39,11 @@ rgds::result_t rgds::rgds(DSGraph DSG, std::set<IVertex> H,
     }
 
     if(VG.size() <= 1) {
-        return rgds::result_t(setops::union_new(D, VG), true);
+        if(!VG.empty() && (H.find(*VG.begin()) == H.end() || Fs.size() > 0)) {
+            return rgds::result_t(setops::union_new(D, VG), true);
+        } else {
+            return rgds::result_t(D, true);
+        }
     }
 
     IVertex v = rgds::choose_v_spd(DSG, spd_ord);
@@ -111,6 +115,7 @@ bool rgds::diams_exceeding(std::list<DSGraph*>* comps, unsigned int k) {
     for(std::list<DSGraph*>::iterator c_it = comps->begin(); 
             c_it != comps->end(); ++c_it) {
         distance_info di = Distance().get_info(**c_it);
+        if((unsigned int) di.diameter > 3*k + 1) { return true; }
         sum_diams += di.diameter;
     }
     return sum_diams > 3*k + comps->size();

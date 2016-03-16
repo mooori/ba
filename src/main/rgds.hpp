@@ -41,7 +41,7 @@ namespace rgds {
             std::set<IVertex> VG, std::set<IVertex> D,
             const std::vector<IVertex>& spd_ord, const unsigned int ncores);
 
-    /** return true if RGDS's termination cond related to Distance is met */
+    /** return true if RGDS's termination conds related to Distance is met */
     bool diams_exceeding(std::list<DSGraph*>* comps, unsigned int k);
 
     /** return true if RGDS's test for case k == 0 is true */
