@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 #include <random>
 #include <utility>
 
@@ -17,7 +16,6 @@ std::pair<DSGraph, unsigned int>
     }
 
     float p_edge = (1/float(n)) * std::sqrt(std::log(t)) * t;
-    std::cout << "\tp_edge = " << p_edge;
     unsigned int nedges = 0;
 
     // create random number generator for float [0,1]
@@ -38,6 +36,5 @@ std::pair<DSGraph, unsigned int>
         }
     }
     
-    std::cout << "\tnedges = " << nedges << "\n";
     return std::pair<DSGraph, unsigned int>(dsg, nedges);
 }
