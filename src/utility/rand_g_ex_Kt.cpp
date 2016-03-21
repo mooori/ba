@@ -26,7 +26,7 @@ std::pair<DSGraph, unsigned int>
 
     // add edges
     for(unsigned int i = 0; i < n; ++i) {
-        for(unsigned int j = 0; j < n; ++j) {
+        for(unsigned int j = i + 1; j < n; ++j) {
             if(i == j) { continue; }    // no loops in graph
             bool b = dis(gen);
             if(b && !dsg.in_adj_list_I(i, j)) {    // no dupl edges
