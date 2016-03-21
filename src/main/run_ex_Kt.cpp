@@ -190,7 +190,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
     if(pp == "pp1" || pp == "pp2") {    // time & printing for both identical
         std::time_t pp_secs = secs_since(start_pp);
         ttotals.pp += pp_secs;
-        ttotals.n_pp_del += nverts - pre_D.size();
+        ttotals.n_pp_del += nverts - dsg.num_vertices();
         std::ofstream outf;
         outf.open(fname, std::ios::app);
         outf << "\ttime pp: " << pp_secs << " for pp = " << pp << "\n";
