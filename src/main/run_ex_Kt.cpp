@@ -75,10 +75,11 @@ struct ttotals_t {
     std::time_t rgds;
     std::time_t wcol_t;
     unsigned int edges;
-    unsigned int n_pp_del;    // number of edges deleted in preprocessing
+    unsigned int n_pp_del;    // number of verts deleted in preprocessing
+    unsigned int ds_size_sum;
     unsigned int wcol_sum;
     ttotals_t() : pp(0), spd(0), rgds(0), wcol_t(0), edges(0), n_pp_del(0),
-    wcol_sum(0) { }
+    ds_size_sum(0), wcol_sum(0) { }
 };
 
 /**
@@ -149,6 +150,8 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
 
         outf << "rgds time: " << ttotals.rgds << ";\t";
         outf << "avg per graph: " << ttotals.rgds/ngraphs << "\n";
+        
+        outf << "avg dom set size: " << ttotals.ds_size_sum/ngraphs << "\n";
 
         outf << "avg wcol number = " << ttotals.wcol_sum/ngraphs << "\n";
         outf << "wcol time: " << ttotals.wcol_t << ";\t";
@@ -224,6 +227,7 @@ void run_graph(unsigned int nverts, std::string pp, unsigned int t,
         throw std::runtime_error("rgds returned D which is not dom set");
     }
 
+    ttotals.ds_size_sum += res.first.size();
     appendf(fname, "\tsize of dominating set: " +
             std::to_string(res.first.size()) + "\n");
 
