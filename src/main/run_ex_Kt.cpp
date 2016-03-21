@@ -133,29 +133,29 @@ void run(std::string pp, unsigned int t, unsigned int ncores) {
 
         std::time_t secs_tot = secs_since(start_nverts);
         outf << "nverts = " << *it << "\ttime: " << secs_tot << ";\t";
-        outf << "avg per graph: " << secs_tot/ngraphs << "\n";
+        outf << "avg per graph: " << secs_tot/(float)ngraphs << "\n";
         
-        outf << "avg edges per graph: " << ttotals.edges/ngraphs << "\n";
+        outf << "avg edges per graph: " << ttotals.edges/(float)ngraphs << "\n";
 
         if(pp == "pp1" || pp == "pp2") {
             outf << "pp time: " << ttotals.pp << " for pp = " << pp << ";\t";
-            outf << "avg per graph: " << ttotals.pp/ngraphs << "\n";
+            outf << "avg per graph: " << ttotals.pp/(float)ngraphs << "\n";
             outf << "pp total number of verts deleted: " << ttotals.n_pp_del <<
                     "thats " << float(ttotals.n_pp_del)/float(*it * ngraphs)
                     << " of all vertices\n";
         }
 
         outf << "spd time: " << ttotals.spd << ";\t";
-        outf << "avg per graph: " << ttotals.spd/ngraphs << "\n";
+        outf << "avg per graph: " << ttotals.spd/(float)ngraphs << "\n";
 
         outf << "rgds time: " << ttotals.rgds << ";\t";
-        outf << "avg per graph: " << ttotals.rgds/ngraphs << "\n";
+        outf << "avg per graph: " << ttotals.rgds/(float)ngraphs << "\n";
         
-        outf << "avg dom set size: " << ttotals.ds_size_sum/ngraphs << "\n";
+        outf << "avg dom set size: " << ttotals.ds_size_sum/(float)ngraphs << "\n";
 
-        outf << "avg wcol number = " << ttotals.wcol_sum/ngraphs << "\n";
+        outf << "avg wcol number = " << ttotals.wcol_sum/(float)ngraphs << "\n";
         outf << "wcol time: " << ttotals.wcol_t << ";\t";
-        outf << "avg per graph: " << ttotals.wcol_t/ngraphs << "\n";
+        outf << "avg per graph: " << ttotals.wcol_t/(float)ngraphs << "\n";
 
         outf.close();
     }
